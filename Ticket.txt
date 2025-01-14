@@ -1,0 +1,225 @@
+Ticket
+
+(println setiap user case)
+(bila nak bayar, customer akan tahu by notifications [popup])
+(admin akan kirakan amount)
+(customer enter time in/time out for duration)
+(history parking akan keluar dekat E-Wallet customer)
+(dekat ticket akan ada)
+-id user
+-timeEnter
+-timeOut
+-Amount
+-Date
+(customers make payment >> view history ticket)
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TicketManagementApp {
+    private JFrame frame;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+    private JTextField startTimeField;
+    private JTextField endTimeField;
+    private JTextField dateField;
+    private JTextField amountField;
+    private JTextArea historyTextArea;
+    private List<Ticket> tickets;
+
+    public TicketManagementApp() {
+        tickets = new ArrayList<>();
+        frame = new JFrame("Ticket Management System");
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        initTicketPanel();
+        initHistoryPanel();
+
+        frame.add(mainPanel);
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setVisible(true);
+    }
+
+    private void initTicketPanel() {
+        JPanel ticketPanel = new JPanel(new BorderLayout(10, 10));
+        ticketPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel welcomeLabel = new JLabel("Ticket Management System", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        ticketPanel.add(welcomeLabel, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel startTimeLabel = new JLabel("Start Time (HH:mm):");
+        startTimeField = new JTextField();
+
+        JLabel endTimeLabel = new JLabel("End Time (HH:mm):");
+        endTimeField = new JTextField();
+
+        JLabel dateLabel = new JLabel("Date (yyyy-MM-dd):");
+        dateField = new JTextField();
+
+        JLabel amountLabel = new JLabel("Amount (RM):");
+        amountField = new JTextField();
+        amountField.setEditable(false); // Amount is calculated automatically
+
+        JButton calculateButton = new JButton("Calculate Amount");
+        calculateButton.addActionListener(new CalculateActionListener());
+        styleButton(calculateButton);
+
+        JButton viewHistoryButton = new JButton("View Ticket History");
+        viewHistoryButton.addActionListener(e -> cardLayout.show(mainPanel, "HistoryPanel"));
+        styleButton(viewHistoryButton);
+
+        JButton popupHistoryButton = new JButton("Show Ticket History");
+        popupHistoryButton.addActionListener(new PopupHistoryActionListener());
+        styleButton(popupHistoryButton);
+
+        centerPanel.add(startTimeLabel);
+        centerPanel.add(startTimeField);
+        centerPanel.add(endTimeLabel);
+        centerPanel.add(endTimeField);
+        centerPanel.add(dateLabel);
+        centerPanel.add(dateField);
+        centerPanel.add(amountLabel);
+        centerPanel.add(amountField);
+        centerPanel.add(viewHistoryButton);
+        centerPanel.add(calculateButton);
+        centerPanel.add(popupHistoryButton);
+
+        ticketPanel.add(centerPanel, BorderLayout.CENTER);
+
+        mainPanel.add(ticketPanel, "TicketPanel");
+    }
+
+    private void initHistoryPanel() {
+        JPanel historyPanel = new JPanel(new BorderLayout(10, 10));
+        historyPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel historyLabel = new JLabel("Ticket History", SwingConstants.CENTER);
+        historyLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        historyPanel.add(historyLabel, BorderLayout.NORTH);
+
+        historyTextArea = new JTextArea();
+        historyTextArea.setEditable(false);
+        historyTextArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        JScrollPane scrollPane = new JScrollPane(historyTextArea);
+        historyPanel.add(scrollPane, BorderLayout.CENTER);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> cardLayout.show(mainPanel, "TicketPanel"));
+        styleButton(backButton);
+
+        historyPanel.add(backButton, BorderLayout.SOUTH);
+
+        mainPanel.add(historyPanel, "HistoryPanel");
+    }
+
+    private void updateHistoryTextArea() {
+        StringBuilder historyContent = new StringBuilder();
+        for (Ticket ticket : tickets) {
+            historyContent.append(ticket).append("\n");
+        }
+        historyTextArea.setText(historyContent.toString());
+    }
+
+    private class CalculateActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                LocalTime startTime = LocalTime.parse(startTimeField.getText(), timeFormatter);
+                LocalTime endTime = LocalTime.parse(endTimeField.getText(), timeFormatter);
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDateTime date = LocalDateTime.parse(dateField.getText() + "T00:00");
+
+                if (endTime.isBefore(startTime)) {
+                    JOptionPane.showMessageDialog(frame, "End time must be after start time.");
+                    return;
+                }
+
+                long durationInMinutes = java.time.Duration.between(startTime, endTime).toMinutes();
+                double amount = durationInMinutes;
+
+                DecimalFormat df = new DecimalFormat("#.00");
+                amountField.setText("RM" + df.format(amount));
+
+                Ticket ticket = new Ticket(startTimeField.getText(), endTimeField.getText(), dateField.getText(), amount);
+                tickets.add(ticket);
+                updateHistoryTextArea();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Invalid input. Please check the format.");
+            }
+        }
+    }
+
+    private class PopupHistoryActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            StringBuilder historyContent = new StringBuilder();
+            for (Ticket ticket : tickets) {
+                historyContent.append(ticket).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, historyContent.toString(), "Ticket History", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(TicketManagementApp::new);
+    }
+}
+
+class Ticket {
+    private String startTime;
+    private String endTime;
+    private String date;
+    private double amount;
+
+    public Ticket(String startTime, String endTime, String date, double amount) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+        this.amount = amount;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket " + "\nStart Time: " + startTime + "\nEnd Time: " + endTime + "\nDate: " + date + "\nAmount: RM" + amount;
+    }
+}

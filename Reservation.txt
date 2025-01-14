@@ -1,0 +1,440 @@
+Reservation 
+
+
+(Delete reservation tak function lagi)
+(keluarkan reservation parking punya notifications once dah buat reservation)
+(delete reservation by using ID)
+(enter ID to delete >> update the availability)
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ParkingReservationApp {
+
+    private JFrame frame;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+    private JComboBox<String> parkingBlockComboBox;
+    private JComboBox<String> levelComboBox;
+    private JComboBox<String> parkingSpotComboBox;
+    private JTextField vehiclePlateNoField;
+    private JComboBox<String> vehicleTypeComboBox;
+    private JFormattedTextField timeEntryField;
+    private JTextField dateField;
+    private List<ParkingBlock> parkingBlocks;
+    private Map<String, Reservation> reservations;
+    private JTextArea historyTextArea;
+    private JTextField deleteReservationIdField;
+
+    public ParkingReservationApp() {
+        parkingBlocks = new ArrayList<>();
+        reservations = new HashMap<>();
+        initializeData();
+
+        frame = new JFrame("Parking Reservation System");
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        initReservationPanel();
+        initHistoryPanel();
+
+        frame.add(mainPanel);
+        frame.setSize(600, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setVisible(true);
+    }
+
+    private void initializeData() {
+        // Initialize parking blocks, levels, and spots for demonstration purposes
+        ParkingBlock blockA = new ParkingBlock("Block A", "North Side");
+        for (int i = 1; i <= 20; i++) {
+            Level level = new Level("Level " + i);
+            for (int j = 1; j <= 20; j++) {
+                level.addParkingSpot(new ParkingSpot(j, true));
+            }
+            blockA.addLevel(level);
+        }
+        parkingBlocks.add(blockA);
+
+        ParkingBlock blockB = new ParkingBlock("Block B", "South Side");
+        for (int i = 1; i <= 20; i++) {
+            Level level = new Level("Level " + i);
+            for (int j = 1; j <= 20; j++) {
+                level.addParkingSpot(new ParkingSpot(j, true));
+            }
+            blockB.addLevel(level);
+        }
+        parkingBlocks.add(blockB);
+    }
+
+    private void initReservationPanel() {
+        JPanel reservationPanel = new JPanel(new BorderLayout(10, 10));
+        reservationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel welcomeLabel = new JLabel("Welcome to the Parking Reservation System", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        reservationPanel.add(welcomeLabel, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new GridLayout(9, 2, 10, 10));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel parkingBlockLabel = new JLabel("Select Parking Block:");
+        parkingBlockComboBox = new JComboBox<>(getParkingBlockNames());
+        parkingBlockComboBox.addActionListener(e -> updateLevelComboBox());
+
+        JLabel levelLabel = new JLabel("Select Level:");
+        levelComboBox = new JComboBox<>();
+        levelComboBox.addActionListener(e -> updateParkingSpotComboBox());
+
+        JLabel parkingSpotLabel = new JLabel("Select Parking Spot:");
+        parkingSpotComboBox = new JComboBox<>();
+
+        JLabel vehiclePlateNoLabel = new JLabel("Vehicle Plate No:");
+        vehiclePlateNoField = new JTextField();
+
+        JLabel vehicleTypeLabel = new JLabel("Vehicle Type:");
+        vehicleTypeComboBox = new JComboBox<>(new String[]{"Car", "Motorcycle", "Truck"});
+
+        JLabel dateLabel = new JLabel("Enter Date (yyyy-MM-dd):");
+        dateField = new JTextField();
+
+        JLabel timeEntryLabel = new JLabel("Entry Time (HH:mm):");
+        timeEntryField = new JFormattedTextField(new SimpleDateFormat("HH:mm"));
+
+        centerPanel.add(parkingBlockLabel);
+        centerPanel.add(parkingBlockComboBox);
+        centerPanel.add(levelLabel);
+        centerPanel.add(levelComboBox);
+        centerPanel.add(parkingSpotLabel);
+        centerPanel.add(parkingSpotComboBox);
+        centerPanel.add(vehiclePlateNoLabel);
+        centerPanel.add(vehiclePlateNoField);
+        centerPanel.add(vehicleTypeLabel);
+        centerPanel.add(vehicleTypeComboBox);
+        centerPanel.add(dateLabel);
+        centerPanel.add(dateField);
+        centerPanel.add(timeEntryLabel);
+        centerPanel.add(timeEntryField);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JButton reserveButton = new JButton("Reserve");
+        reserveButton.addActionListener(new ReserveActionListener());
+        styleButton(reserveButton);
+
+        JButton viewHistoryButton = new JButton("View Reservation History");
+        viewHistoryButton.addActionListener(e -> {
+            updateHistoryTextArea();
+            cardLayout.show(mainPanel, "HistoryPanel");
+        });
+        styleButton(viewHistoryButton);
+
+        JButton deleteButton = new JButton("Delete Reservation");
+        deleteButton.addActionListener(e -> {
+            // Navigate to the delete section in the history panel
+          //  cardLayout.show(mainPanel, "HistoryPanel");
+            deleteReservationIdField.requestFocus();
+        });
+        styleButton(deleteButton);
+
+        buttonPanel.add(viewHistoryButton);
+        buttonPanel.add(reserveButton);
+        buttonPanel.add(deleteButton);
+
+        reservationPanel.add(centerPanel, BorderLayout.CENTER);
+        reservationPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        mainPanel.add(reservationPanel, "ReservationPanel");
+
+        // Initialize ComboBoxes with default values
+        updateLevelComboBox();
+    }
+
+    private void initHistoryPanel() {
+        JPanel historyPanel = new JPanel(new BorderLayout(10, 10));
+        historyPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel historyLabel = new JLabel("Reservation History", SwingConstants.CENTER);
+        historyLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        historyPanel.add(historyLabel, BorderLayout.NORTH);
+
+        // Text area to display reservation history
+        historyTextArea = new JTextArea();
+        historyTextArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(historyTextArea);
+        historyPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Delete panel for deleting reservations
+        JPanel deletePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        deletePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel deleteLabel = new JLabel("Enter Reservation ID to Delete:");
+        deleteReservationIdField = new JTextField(10); // Field to input the reservation ID
+
+        JButton deleteButton = new JButton("Delete Reservation");
+        deleteButton.addActionListener(new DeleteActionListener());
+        styleButton(deleteButton);
+
+        deletePanel.add(deleteLabel);
+        deletePanel.add(deleteReservationIdField);
+        deletePanel.add(deleteButton);
+
+        historyPanel.add(deletePanel, BorderLayout.SOUTH);
+
+        // Back button to return to the reservation panel
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> cardLayout.show(mainPanel, "ReservationPanel"));
+        styleButton(backButton);
+        bottomPanel.add(backButton);
+
+        historyPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        mainPanel.add(historyPanel, "HistoryPanel");
+    }
+
+    private void updateHistoryTextArea() {
+        StringBuilder historyContent = new StringBuilder();
+        for (Reservation reservation : reservations.values()) {
+            historyContent.append(reservation).append("\n");
+        }
+        historyTextArea.setText(historyContent.toString());
+    }
+
+    private String[] getParkingBlockNames() {
+        return parkingBlocks.stream().map(ParkingBlock::getName).toArray(String[]::new);
+    }
+
+    private void updateLevelComboBox() {
+        String selectedBlockName = (String) parkingBlockComboBox.getSelectedItem();
+        ParkingBlock selectedBlock = parkingBlocks.stream()
+                .filter(block -> block.getName().equals(selectedBlockName))
+                .findFirst()
+                .orElse(null);
+
+        if (selectedBlock != null) {
+            levelComboBox.setModel(new DefaultComboBoxModel<>(selectedBlock.getLevelNames()));
+            updateParkingSpotComboBox();
+        }
+    }
+
+    private void updateParkingSpotComboBox() {
+        String selectedBlockName = (String) parkingBlockComboBox.getSelectedItem();
+        String selectedLevelName = (String) levelComboBox.getSelectedItem();
+        ParkingBlock selectedBlock = parkingBlocks.stream()
+                .filter(block -> block.getName().equals(selectedBlockName))
+                .findFirst()
+                .orElse(null);
+
+        if (selectedBlock != null) {
+            Level selectedLevel = selectedBlock.getLevel(selectedLevelName);
+            if (selectedLevel != null) {
+                parkingSpotComboBox.setModel(new DefaultComboBoxModel<>(selectedLevel.getAvailableParkingSpotIds()));
+            }
+        }
+    }
+
+    private class ReserveActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String selectedBlockName = (String) parkingBlockComboBox.getSelectedItem();
+            String selectedLevelName = (String) levelComboBox.getSelectedItem();
+            int selectedParkingSpotId = Integer.parseInt((String) parkingSpotComboBox.getSelectedItem());
+            String vehiclePlateNo = vehiclePlateNoField.getText();
+            String vehicleType = (String) vehicleTypeComboBox.getSelectedItem();
+            String date = dateField.getText();
+            String timeEntry = timeEntryField.getText();
+            String dateTime = date + " " + timeEntry;
+
+            ParkingBlock selectedBlock = parkingBlocks.stream()
+                    .filter(block -> block.getName().equals(selectedBlockName))
+                    .findFirst()
+                    .orElse(null);
+
+            if (selectedBlock != null) {
+                Level selectedLevel = selectedBlock.getLevel(selectedLevelName);
+                if (selectedLevel != null) {
+                    ParkingSpot selectedSpot = selectedLevel.getParkingSpot(selectedParkingSpotId);
+                    if (selectedSpot != null && selectedSpot.isAvailable()) {
+                        selectedSpot.setAvailable(false);
+
+                        String reservationId = "R" + (reservations.size() + 1);
+                        Reservation reservation = new Reservation(reservationId, dateTime, vehiclePlateNo, vehicleType, selectedSpot);
+                        reservations.put(reservationId, reservation);
+                        JOptionPane.showMessageDialog(frame, "Parking spot " + selectedSpot.getId() + " reserved successfully!");
+                        updateHistoryTextArea();
+                        
+                        // Clear input fields after reservation
+                        clearInputFields();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Selected parking spot is not available.");
+                    }
+                }
+            }
+        }
+    }
+
+    private class DeleteActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String reservationId = deleteReservationIdField.getText().trim(); // Get input from the text field
+            if (!reservationId.isEmpty() && reservations.containsKey(reservationId)) {
+                // Remove the reservation if it exists
+                Reservation reservation = reservations.remove(reservationId);
+                reservation.getParkingSpot().setAvailable(true);
+                JOptionPane.showMessageDialog(frame, "Reservation " + reservationId + " deleted successfully!");
+
+                // Update history text area and clear input field
+                updateHistoryTextArea();
+                deleteReservationIdField.setText("");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Reservation ID not found. Please try again.");
+            }
+        }
+    }
+
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+    }
+
+    private void clearInputFields() {
+        parkingBlockComboBox.setSelectedIndex(0);
+        updateLevelComboBox();
+        vehiclePlateNoField.setText("");
+        vehicleTypeComboBox.setSelectedIndex(0);
+        dateField.setText("");
+        timeEntryField.setValue(null);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ParkingReservationApp::new);
+    }
+}
+
+class ParkingBlock {
+    private String name;
+    private String location;
+    private List<Level> levels;
+
+    public ParkingBlock(String name, String location) {
+        this.name = name;
+        this.location = location;
+        this.levels = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void addLevel(Level level) {
+        levels.add(level);
+    }
+
+    public String[] getLevelNames() {
+        return levels.stream().map(Level::getName).toArray(String[]::new);
+    }
+
+    public Level getLevel(String name) {
+        return levels.stream().filter(level -> level.getName().equals(name)).findFirst().orElse(null);
+    }
+}
+
+class Level {
+    private String name;
+    private List<ParkingSpot> parkingSpots;
+
+    public Level(String name) {
+        this.name = name;
+        this.parkingSpots = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void addParkingSpot(ParkingSpot spot) {
+        parkingSpots.add(spot);
+    }
+
+    public String[] getAvailableParkingSpotIds() {
+        return parkingSpots.stream().filter(ParkingSpot::isAvailable).map(spot -> String.valueOf(spot.getId())).toArray(String[]::new);
+    }
+
+    public ParkingSpot getParkingSpot(int id) {
+        return parkingSpots.stream().filter(spot -> spot.getId() == id).findFirst().orElse(null);
+    }
+}
+
+class ParkingSpot {
+    private int id;
+    private boolean available;
+
+    public ParkingSpot(int id, boolean available) {
+        this.id = id;
+        this.available = available;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+}
+
+class Reservation {
+    private String id;
+    private String dateTime;
+    private String vehiclePlateNo;
+    private String vehicleType;
+    private ParkingSpot parkingSpot;
+
+    public Reservation(String id, String dateTime, String vehiclePlateNo, String vehicleType, ParkingSpot parkingSpot) {
+        this.id = id;
+        this.dateTime = dateTime;
+        this.vehiclePlateNo = vehiclePlateNo;
+        this.vehicleType = vehicleType;
+        this.parkingSpot = parkingSpot;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public String getVehiclePlateNo() {
+        return vehiclePlateNo;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public ParkingSpot getParkingSpot() {
+        return parkingSpot;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation ID: " + id + "\nDate and Time: " + dateTime + "\nVehicle Plate No: " + vehiclePlateNo + 
+               "\nVehicle Type: " + vehicleType + "\nParking Spot ID: " + parkingSpot.getId() + "\n";
+    }
+}

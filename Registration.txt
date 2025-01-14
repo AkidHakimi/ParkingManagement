@@ -1,0 +1,227 @@
+Registration
+
+(4 button tak function lagi)
+(bila click for each akan keluar interface yang nak; e.g: Make Payment)
+(extends for each)
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+
+public class RegistrationApp {
+
+    private JFrame frame;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private Map<String, String> userDatabase;
+
+    public RegistrationApp() {
+        userDatabase = new HashMap<>();
+        frame = new JFrame("Registration and Login");
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        initRegistrationPanel();
+        initLoginPanel();
+
+        frame.add(mainPanel);
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setVisible(true);
+    }
+
+    private void initRegistrationPanel() {
+        JPanel registrationPanel = new JPanel(new GridBagLayout());
+        registrationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("Register", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        registrationPanel.add(titleLabel, gbc);
+
+        gbc.gridwidth = 1;
+
+        JLabel usernameLabel = new JLabel("Username:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        registrationPanel.add(usernameLabel, gbc);
+
+        usernameField = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        registrationPanel.add(usernameField, gbc);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        registrationPanel.add(passwordLabel, gbc);
+
+        passwordField = new JPasswordField();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        registrationPanel.add(passwordField, gbc);
+
+        JButton registerButton = new JButton("Register");
+        registerButton.addActionListener(new RegisterActionListener());
+        styleButton(registerButton);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        registrationPanel.add(registerButton, gbc);
+
+        JButton goToLoginButton = new JButton("Already have an account? Login.");
+        goToLoginButton.addActionListener(e -> cardLayout.show(mainPanel, "LoginPanel"));
+        styleButton(goToLoginButton);
+        gbc.gridy = 4;
+        registrationPanel.add(goToLoginButton, gbc);
+
+        mainPanel.add(registrationPanel, "RegistrationPanel");
+    }
+
+    private void initLoginPanel() {
+        JPanel loginPanel = new JPanel(new GridBagLayout());
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("Login", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        loginPanel.add(titleLabel, gbc);
+
+        gbc.gridwidth = 1;
+
+        JLabel usernameLabel = new JLabel("Username:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        loginPanel.add(usernameLabel, gbc);
+
+        JTextField loginUsernameField = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        loginPanel.add(loginUsernameField, gbc);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        loginPanel.add(passwordLabel, gbc);
+
+        JPasswordField loginPasswordField = new JPasswordField();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        loginPanel.add(loginPasswordField, gbc);
+
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(e -> {
+            String username = loginUsernameField.getText();
+            String password = new String(loginPasswordField.getPassword());
+
+            if (userDatabase.containsKey(username) && userDatabase.get(username).equals(password)) {
+                JOptionPane.showMessageDialog(frame, "Login successful!");
+                cardLayout.show(mainPanel, "HomePanel");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Invalid username or password.");
+            }
+        });
+        styleButton(loginButton);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        loginPanel.add(loginButton, gbc);
+
+        JButton goToRegisterButton = new JButton("Don't have an account? Register.");
+        goToRegisterButton.addActionListener(e -> cardLayout.show(mainPanel, "RegistrationPanel"));
+        styleButton(goToRegisterButton);
+        gbc.gridy = 4;
+        loginPanel.add(goToRegisterButton, gbc);
+
+        mainPanel.add(loginPanel, "LoginPanel");
+
+        initHomePanel();
+    }
+
+    private void initHomePanel() {
+        JPanel homePanel = new JPanel(new BorderLayout(10, 10));
+        homePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel welcomeLabel = new JLabel("Welcome to the Home Page!", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        homePanel.add(welcomeLabel, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JButton makePaymentButton = new JButton("Make Payment");
+        makePaymentButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Make Payment clicked"));
+        styleButton(makePaymentButton);
+
+        JButton viewEwalletButton = new JButton("View E-Wallet");
+        viewEwalletButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "View E-Wallet clicked"));
+        styleButton(viewEwalletButton);
+
+        JButton reserveParkingButton = new JButton("Reserve Parking");
+        reserveParkingButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Reserve Parking clicked"));
+        styleButton(reserveParkingButton);
+
+        JButton searchVehicleButton = new JButton("Search Vehicle");
+        searchVehicleButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Search Vehicle clicked"));
+        styleButton(searchVehicleButton);
+
+        centerPanel.add(makePaymentButton);
+        centerPanel.add(viewEwalletButton);
+        centerPanel.add(reserveParkingButton);
+        centerPanel.add(searchVehicleButton);
+
+        homePanel.add(centerPanel, BorderLayout.CENTER);
+
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "LoginPanel"));
+        styleButton(logoutButton);
+        homePanel.add(logoutButton, BorderLayout.SOUTH);
+
+        mainPanel.add(homePanel, "HomePanel");
+    }
+
+    private class RegisterActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please enter both username and password.");
+            } else if (userDatabase.containsKey(username)) {
+                JOptionPane.showMessageDialog(frame, "Username already exists.");
+            } else {
+                userDatabase.put(username, password);
+                JOptionPane.showMessageDialog(frame, "Registration successful! Please log in.");
+                cardLayout.show(mainPanel, "LoginPanel");
+            }
+        }
+    }
+
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(RegistrationApp::new);
+    }
+}

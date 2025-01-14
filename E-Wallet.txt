@@ -1,0 +1,151 @@
+E-Wallet
+
+(boleh topup account for customer)
+(deduction account from amount calculated in the ticket system)
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EWalletApp {
+
+    private JFrame frame;
+    private JTextField amountField;
+    private JTextArea transactionHistoryArea;
+    private JLabel balanceLabel;
+    private double balance;
+    private List<String> transactionHistory;
+
+    public EWalletApp() {
+        balance = 0.0;
+        transactionHistory = new ArrayList<>();
+        initialize();
+    }
+
+    private void initialize() {
+        frame = new JFrame("E-Wallet");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 600);
+        frame.setLayout(new BorderLayout(10, 10));
+        frame.getContentPane().setBackground(Color.WHITE);
+
+        // Top-up Panel
+        JPanel topUpPanel = new JPanel();
+        topUpPanel.setLayout(new GridLayout(3, 2, 10, 10));
+        topUpPanel.setBorder(BorderFactory.createTitledBorder("Top-Up Wallet"));
+        topUpPanel.setBackground(Color.WHITE);
+
+        JLabel amountLabel = new JLabel("Enter Amount:");
+        amountField = new JTextField();
+        amountField.setPreferredSize(new Dimension(100, 30));
+
+        JButton topUpButton = new JButton("Top Up");
+        topUpButton.addActionListener(new TopUpActionListener());
+        topUpButton.setBackground(new Color(0, 153, 76));
+        topUpButton.setForeground(Color.WHITE);
+
+        topUpPanel.add(amountLabel);
+        topUpPanel.add(amountField);
+        topUpPanel.add(new JLabel()); // Empty label for spacing
+        topUpPanel.add(topUpButton);
+
+        // Deduct Panel
+        JPanel deductPanel = new JPanel();
+        deductPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        deductPanel.setBorder(BorderFactory.createTitledBorder("Deduct Wallet"));
+        deductPanel.setBackground(Color.WHITE);
+
+        JButton deductButton = new JButton("Pay Parking Ticket");
+        deductButton.addActionListener(new DeductActionListener());
+        deductButton.setBackground(new Color(204, 0, 0));
+        deductButton.setForeground(Color.WHITE);
+
+        deductPanel.add(new JLabel()); // Empty label for spacing
+        deductPanel.add(deductButton);
+
+        // Balance Panel
+        JPanel balancePanel = new JPanel();
+        balancePanel.setLayout(new BorderLayout());
+        balancePanel.setBorder(BorderFactory.createTitledBorder("Wallet Balance"));
+        balancePanel.setBackground(Color.WHITE);
+
+        balanceLabel = new JLabel("Balance: RM0.00", SwingConstants.CENTER);
+        balanceLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        balancePanel.add(balanceLabel, BorderLayout.CENTER);
+
+        // Transaction History Panel
+        JPanel transactionHistoryPanel = new JPanel();
+        transactionHistoryPanel.setLayout(new BorderLayout());
+        transactionHistoryPanel.setBorder(BorderFactory.createTitledBorder("Transaction History"));
+        transactionHistoryPanel.setBackground(Color.WHITE);
+
+        transactionHistoryArea = new JTextArea();
+        transactionHistoryArea.setEditable(false);
+        transactionHistoryArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        JScrollPane scrollPane = new JScrollPane(transactionHistoryArea);
+        transactionHistoryPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Adding Panels to Frame
+        frame.add(topUpPanel, BorderLayout.NORTH);
+        frame.add(deductPanel, BorderLayout.CENTER);
+        frame.add(balancePanel, BorderLayout.SOUTH);
+        frame.add(transactionHistoryPanel, BorderLayout.EAST);
+
+        frame.setVisible(true);
+    }
+
+    private class TopUpActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                double amount = Double.parseDouble(amountField.getText());
+                if (amount <= 0) {
+                    throw new NumberFormatException();
+                }
+
+                // Update balance and transaction history
+                balance += amount;
+                balanceLabel.setText(String.format("Balance: RM%.2f", balance));
+                String transaction = String.format("Top-up: RM%.2f", amount);
+                transactionHistory.add(transaction);
+                transactionHistoryArea.append(transaction + "\n");
+
+                // Notify user of successful top-up
+                JOptionPane.showMessageDialog(frame, "Top-up successful!", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+
+                // Clear the amount field
+                amountField.setText("");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Invalid amount. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private class DeductActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            double parkingFee = 4.00; // Assume a fixed parking fee for simplicity
+            if (balance >= parkingFee) {
+                // Deduct parking fee from balance
+                balance -= parkingFee;
+                balanceLabel.setText(String.format("Balance: RM%.2f", balance));
+                String transaction = String.format("Deduct: RM%.2f for Parking Ticket", parkingFee);
+                transactionHistory.add(transaction);
+                transactionHistoryArea.append(transaction + "\n");
+
+                // Notify user of successful deduction
+                JOptionPane.showMessageDialog(frame, "Payment successful!", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Notify user of insufficient funds
+                JOptionPane.showMessageDialog(frame, "Insufficient funds. Please top-up your wallet.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(EWalletApp::new);
+    }
+}
