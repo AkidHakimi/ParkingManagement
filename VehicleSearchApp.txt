@@ -1,0 +1,159 @@
+VehicleSearchApp
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+public class VehicleSearchApp {
+    private JFrame frame;
+    private JTextField searchField;
+    private JTextArea resultArea;
+    private Map<String, Vehicle> vehicleDatabase;
+
+    public VehicleSearchApp() {
+        vehicleDatabase = new HashMap<>();
+        initializeData();
+
+        frame = new JFrame("Vehicle Search System");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.setLayout(new BorderLayout(10, 10));
+        frame.getContentPane().setBackground(Color.WHITE);
+
+        initSearchPanel();
+        initResultPanel();
+
+        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setVisible(true);
+    }
+
+    private void initializeData() {
+        // Initialize vehicle database for demonstration purposes
+        vehicleDatabase.put("ABC1234", new Vehicle("ABC1234", "Toyota", "Camry", "Black"));
+        vehicleDatabase.put("XYZ5678", new Vehicle("XYZ5678", "Honda", "Civic", "White"));
+        vehicleDatabase.put("LMN4321", new Vehicle("LMN4321", "Ford", "Focus", "Blue"));
+    }
+
+    private void initSearchPanel() {
+        JPanel searchPanel = new JPanel(new BorderLayout(10, 10));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        searchPanel.setBackground(Color.WHITE);
+
+        JLabel searchLabel = new JLabel("Enter License Plate Number:");
+        searchLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        searchPanel.add(searchLabel, BorderLayout.NORTH);
+
+        searchField = new JTextField();
+        searchPanel.add(searchField, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(new SearchActionListener());
+        styleButton(searchButton);
+
+        JButton randomButton = new JButton("Random Plate Number");
+        randomButton.addActionListener(new RandomActionListener());
+        styleButton(randomButton);
+
+        buttonPanel.add(searchButton);
+        buttonPanel.add(randomButton);
+        searchPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.add(searchPanel, BorderLayout.NORTH);
+    }
+
+    private void initResultPanel() {
+        JPanel resultPanel = new JPanel(new BorderLayout(10, 10));
+        resultPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        resultPanel.setBackground(Color.WHITE);
+
+        JLabel resultLabel = new JLabel("Search Results:");
+        resultLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        resultPanel.add(resultLabel, BorderLayout.NORTH);
+
+        resultArea = new JTextArea();
+        resultArea.setEditable(false);
+        resultArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        resultArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        JScrollPane scrollPane = new JScrollPane(resultArea);
+        resultPanel.add(scrollPane, BorderLayout.CENTER);
+
+        frame.add(resultPanel, BorderLayout.CENTER);
+    }
+
+    private class SearchActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String licensePlate = searchField.getText().trim();
+            if (licensePlate.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please enter a license plate number.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Vehicle vehicle = vehicleDatabase.get(licensePlate);
+            if (vehicle != null) {
+                resultArea.setText(vehicle.toString());
+            } else {
+                resultArea.setText("Vehicle not found.");
+            }
+        }
+    }
+
+    private class RandomActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String randomPlateNumber = generateRandomPlateNumber();
+            searchField.setText(randomPlateNumber);
+        }
+    }
+
+    private String generateRandomPlateNumber() {
+        Random random = new Random();
+        StringBuilder plateNumber = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            plateNumber.append((char) ('A' + random.nextInt(26)));
+        }
+        for (int i = 0; i < 4; i++) {
+            plateNumber.append(random.nextInt(10));
+        }
+        return plateNumber.toString();
+    }
+
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(VehicleSearchApp::new);
+    }
+}
+
+class Vehicle {
+    private String licensePlate;
+    private String make;
+    private String model;
+    private String color;
+
+    public Vehicle(String licensePlate, String make, String model, String color) {
+        this.licensePlate = licensePlate;
+        this.make = make;
+        this.model = model;
+        this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "License Plate: " + licensePlate + "\n" +
+               "Make: " + make + "\n" +
+               "Model: " + model + "\n" +
+               "Color: " + color + "\n";
+    }
+}
