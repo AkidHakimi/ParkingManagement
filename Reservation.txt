@@ -1,11 +1,3 @@
-Reservation 
-
-
-(Delete reservation tak function lagi)
-(keluarkan reservation parking punya notifications once dah buat reservation)
-(delete reservation by using ID)
-(enter ID to delete >> update the availability)
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -138,9 +130,7 @@ public class ParkingReservationApp {
 
         JButton deleteButton = new JButton("Delete Reservation");
         deleteButton.addActionListener(e -> {
-            // Navigate to the delete section in the history panel
-          //  cardLayout.show(mainPanel, "HistoryPanel");
-            deleteReservationIdField.requestFocus();
+            cardLayout.show(mainPanel, "HistoryPanel");
         });
         styleButton(deleteButton);
 
