@@ -1,12 +1,9 @@
-VehicleSearchApp
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class VehicleSearchApp {
     private JFrame frame;
@@ -50,18 +47,12 @@ public class VehicleSearchApp {
         searchField = new JTextField();
         searchPanel.add(searchField, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new SearchActionListener());
         styleButton(searchButton);
 
-        JButton randomButton = new JButton("Random Plate Number");
-        randomButton.addActionListener(new RandomActionListener());
-        styleButton(randomButton);
-
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(searchButton);
-        buttonPanel.add(randomButton);
         searchPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         frame.add(searchPanel, BorderLayout.NORTH);
@@ -102,26 +93,6 @@ public class VehicleSearchApp {
                 resultArea.setText("Vehicle not found.");
             }
         }
-    }
-
-    private class RandomActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String randomPlateNumber = generateRandomPlateNumber();
-            searchField.setText(randomPlateNumber);
-        }
-    }
-
-    private String generateRandomPlateNumber() {
-        Random random = new Random();
-        StringBuilder plateNumber = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            plateNumber.append((char) ('A' + random.nextInt(26)));
-        }
-        for (int i = 0; i < 4; i++) {
-            plateNumber.append(random.nextInt(10));
-        }
-        return plateNumber.toString();
     }
 
     private void styleButton(JButton button) {
