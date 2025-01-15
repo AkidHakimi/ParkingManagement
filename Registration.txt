@@ -1,9 +1,3 @@
-Registration
-
-(4 button tak function lagi)
-(bila click for each akan keluar interface yang nak; e.g: Make Payment)
-(extends for each)
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
