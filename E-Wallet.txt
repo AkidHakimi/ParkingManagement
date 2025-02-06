@@ -1,7 +1,7 @@
-E-Wallet
+//E-Wallet
 
-(boleh topup account for customer)
-(deduction account from amount calculated in the ticket system)
+//(boleh topup account for customer)
+//(deduction account from amount calculated in the ticket system)
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,6 +52,16 @@ public class EWalletApp {
         topUpPanel.add(new JLabel()); // Empty label for spacing
         topUpPanel.add(topUpButton);
 
+        // Back button
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(10, 10, 20, 19);
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close current window
+            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
+        });
+        //styleButton(backButton);
+        topUpPanel.add(backButton);
+        
         // Deduct Panel
         JPanel deductPanel = new JPanel();
         deductPanel.setLayout(new GridLayout(1, 2, 10, 10));
