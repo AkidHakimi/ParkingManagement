@@ -1,31 +1,17 @@
-Ticket
-
-(println setiap user case)
-(bila nak bayar, customer akan tahu by notifications [popup])
-(admin akan kirakan amount)
-(customer enter time in/time out for duration)
-(history parking akan keluar dekat E-Wallet customer)
-(dekat ticket akan ada)
--id user
--timeEnter
--timeOut
--Amount
--Date
-(customers make payment >> view history ticket)
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TicketManagementApp {
+
     private JFrame frame;
     private CardLayout cardLayout;
     private JPanel mainPanel;
@@ -45,22 +31,35 @@ public class TicketManagementApp {
         initTicketPanel();
         initHistoryPanel();
 
-        frame.add(mainPanel);
+        frame.getContentPane().add(mainPanel);
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     private void initTicketPanel() {
-        JPanel ticketPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel ticketPanel = new JPanel();
         ticketPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        ticketPanel.setLayout(null);
+
+        // Back button
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(13, 13, 69, 22);
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close current window
+            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
+        });
+        styleButton(backButton);
+        ticketPanel.add(backButton);
 
         JLabel welcomeLabel = new JLabel("Ticket Management System", SwingConstants.CENTER);
+        welcomeLabel.setBounds(20, 20, 446, 19);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        ticketPanel.add(welcomeLabel, BorderLayout.NORTH);
+        ticketPanel.add(welcomeLabel);
 
         JPanel centerPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        centerPanel.setBounds(83, 49, 383, 294);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel startTimeLabel = new JLabel("Start Time (HH:mm):");
@@ -74,7 +73,7 @@ public class TicketManagementApp {
 
         JLabel amountLabel = new JLabel("Amount (RM):");
         amountField = new JTextField();
-        amountField.setEditable(false); // Amount is calculated automatically
+        amountField.setEditable(false);
 
         JButton calculateButton = new JButton("Calculate Amount");
         calculateButton.addActionListener(new CalculateActionListener());
@@ -100,8 +99,7 @@ public class TicketManagementApp {
         centerPanel.add(calculateButton);
         centerPanel.add(popupHistoryButton);
 
-        ticketPanel.add(centerPanel, BorderLayout.CENTER);
-
+        ticketPanel.add(centerPanel);
         mainPanel.add(ticketPanel, "TicketPanel");
     }
 
@@ -124,7 +122,6 @@ public class TicketManagementApp {
         styleButton(backButton);
 
         historyPanel.add(backButton, BorderLayout.SOUTH);
-
         mainPanel.add(historyPanel, "HistoryPanel");
     }
 
@@ -141,21 +138,22 @@ public class TicketManagementApp {
         public void actionPerformed(ActionEvent e) {
             try {
                 DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
                 LocalTime startTime = LocalTime.parse(startTimeField.getText(), timeFormatter);
                 LocalTime endTime = LocalTime.parse(endTimeField.getText(), timeFormatter);
-                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDateTime date = LocalDateTime.parse(dateField.getText() + "T00:00");
+                LocalDate date = LocalDate.parse(dateField.getText(), dateFormatter);
 
                 if (endTime.isBefore(startTime)) {
                     JOptionPane.showMessageDialog(frame, "End time must be after start time.");
                     return;
                 }
 
-                long durationInMinutes = java.time.Duration.between(startTime, endTime).toMinutes();
-                double amount = durationInMinutes;
+                long durationInMinutes = Duration.between(startTime, endTime).toMinutes();
+                double amount = durationInMinutes / 60.0; // Convert minutes to hours
 
-                DecimalFormat df = new DecimalFormat("#.00");
-                amountField.setText("RM" + df.format(amount));
+                DecimalFormat df = new DecimalFormat("#0.00");
+                amountField.setText("RM " + df.format(amount));
 
                 Ticket ticket = new Ticket(startTimeField.getText(), endTimeField.getText(), dateField.getText(), amount);
                 tickets.add(ticket);
@@ -189,6 +187,7 @@ public class TicketManagementApp {
     }
 }
 
+// Ticket class to store ticket details
 class Ticket {
     private String startTime;
     private String endTime;
@@ -202,24 +201,8 @@ class Ticket {
         this.amount = amount;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
     @Override
     public String toString() {
-        return "Ticket " + "\nStart Time: " + startTime + "\nEnd Time: " + endTime + "\nDate: " + date + "\nAmount: RM" + amount;
+        return "Date: " + date + ", Start: " + startTime + ", End: " + endTime + ", Amount: RM " + amount;
     }
 }
