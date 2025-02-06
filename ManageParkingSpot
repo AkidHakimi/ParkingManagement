@@ -10,12 +10,14 @@ public class ManageParkingSpot {
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private JFrame frame;
+    private Admin admin;
 
-    public ManageParkingSpot(JFrame frame, JPanel mainPanel, CardLayout cardLayout, List<String[]> parkingSpots) {
+    public ManageParkingSpot(JFrame frame, JPanel mainPanel, CardLayout cardLayout, List<String[]> parkingSpots, Admin admin) {
         this.frame = frame;
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
         this.parkingSpots = parkingSpots;
+        this.admin = admin;
 
         initManagePanel();
     }
@@ -25,7 +27,10 @@ public class ManageParkingSpot {
 
         // Back Button
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "HomePanel"));
+        backButton.addActionListener(e -> {
+            admin.refreshParkingDisplay(); // Refresh the Admin panel
+            cardLayout.show(mainPanel, "HomePanel"); // Navigate back to the home panel
+        });
         managePanel.add(backButton, BorderLayout.NORTH);
 
         // Parking List
