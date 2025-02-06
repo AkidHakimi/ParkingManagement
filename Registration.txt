@@ -32,12 +32,23 @@ public class RegistrationApp {
 
     private void initRegistrationPanel() {
         JPanel registrationPanel = new JPanel(new GridBagLayout());
+        
+     // Back button
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(10, 10, 68, 22);
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close current window
+            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
+        });
+        styleButton(backButton);
+        registrationPanel.add(backButton);
+        
         registrationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titleLabel = new JLabel("Register", SwingConstants.LEFT);
+        JLabel titleLabel = new JLabel("Register", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -85,12 +96,13 @@ public class RegistrationApp {
 
     private void initLoginPanel() {
         JPanel loginPanel = new JPanel(new GridBagLayout());
+               
         loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titleLabel = new JLabel("Login", SwingConstants.LEFT);
+        JLabel titleLabel = new JLabel("Login", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -155,25 +167,37 @@ public class RegistrationApp {
         JLabel welcomeLabel = new JLabel("Welcome to the Home Page!", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
         homePanel.add(welcomeLabel, BorderLayout.NORTH);
-
         JPanel centerPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JButton makePaymentButton = new JButton("Make Payment");
-        makePaymentButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Make Payment clicked"));
+        makePaymentButton.addActionListener(e -> {
+            // Open the Make Payment interface
+            new TicketManagementApp(); // Create and display the EWalletApp
+        });
         styleButton(makePaymentButton);
 
         JButton viewEwalletButton = new JButton("View E-Wallet");
-        viewEwalletButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "View E-Wallet clicked"));
+        viewEwalletButton.addActionListener(e -> {
+            // Open the E-Wallet interface
+            new EWalletApp(); // Create and display the EWalletApp
+        });
         styleButton(viewEwalletButton);
 
         JButton reserveParkingButton = new JButton("Reserve Parking");
-        reserveParkingButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Reserve Parking clicked"));
+        reserveParkingButton.addActionListener(e -> {
+            // Open the Reserve Parking Interface
+            new ParkingReservationApp(); // Create and display the Reserve Parking
+        });
         styleButton(reserveParkingButton);
 
         JButton searchVehicleButton = new JButton("Search Vehicle");
-        searchVehicleButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Search Vehicle clicked"));
+        searchVehicleButton.addActionListener(e -> {
+            // Open the Search Vehicle
+            new VehicleSearchApp(); // Create and display the Search Vehicle
+        });
         styleButton(searchVehicleButton);
+
 
         centerPanel.add(makePaymentButton);
         centerPanel.add(viewEwalletButton);
