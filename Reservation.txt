@@ -1,10 +1,10 @@
-Reservation 
+//Reservation 
 
 
-(Delete reservation tak function lagi)
-(keluarkan reservation parking punya notifications once dah buat reservation)
-(delete reservation by using ID)
-(enter ID to delete >> update the availability)
+//(Delete reservation tak function lagi)
+//(keluarkan reservation parking punya notifications once dah buat reservation)
+//(delete reservation by using ID)
+//(enter ID to delete >> update the availability)
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ public class ParkingReservationApp {
     private Map<String, Reservation> reservations;
     private JTextArea historyTextArea;
     private JTextField deleteReservationIdField;
-
+   
     public ParkingReservationApp() {
         parkingBlocks = new ArrayList<>();
         reservations = new HashMap<>();
@@ -78,6 +78,16 @@ public class ParkingReservationApp {
     private void initReservationPanel() {
         JPanel reservationPanel = new JPanel(new BorderLayout(10, 10));
         reservationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+     // Back button
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(10, 10, 68, 19);
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close current window
+            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
+        });
+        styleButton(backButton);
+        reservationPanel.add(backButton);
 
         JLabel welcomeLabel = new JLabel("Welcome to the Parking Reservation System", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -136,17 +146,8 @@ public class ParkingReservationApp {
         });
         styleButton(viewHistoryButton);
 
-        JButton deleteButton = new JButton("Delete Reservation");
-        deleteButton.addActionListener(e -> {
-            // Navigate to the delete section in the history panel
-          //  cardLayout.show(mainPanel, "HistoryPanel");
-            deleteReservationIdField.requestFocus();
-        });
-        styleButton(deleteButton);
-
         buttonPanel.add(viewHistoryButton);
         buttonPanel.add(reserveButton);
-        buttonPanel.add(deleteButton);
 
         reservationPanel.add(centerPanel, BorderLayout.CENTER);
         reservationPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -198,6 +199,8 @@ public class ParkingReservationApp {
         historyPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         mainPanel.add(historyPanel, "HistoryPanel");
+        
+        
     }
 
     private void updateHistoryTextArea() {
