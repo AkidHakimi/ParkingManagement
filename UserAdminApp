@@ -26,6 +26,7 @@ public class UserAdminApp {
         JButton userButton = new JButton("User");
         userButton.addActionListener(e -> {
             // Open the User interface
+        	frame.dispose();
             new RegistrationApp(); // Create and display the RegistrationApp
         });
         styleButton(userButton);
@@ -35,8 +36,9 @@ public class UserAdminApp {
         // Create the Admin button
         JButton adminButton = new JButton("Admin");
         adminButton.addActionListener(e -> {
+        	frame.dispose();
             // Open the Admin interface
-            new RegistrationApp(); // Create and display the RegistrationApp
+            new Admin(); // Create and display the RegistrationApp
         });
         styleButton(adminButton);
         adminButton.setBounds(200, 190, 200, 50); // Adjusted y position
@@ -57,7 +59,13 @@ public class UserAdminApp {
             }
         });
         styleButton(exitButton);
-        exitButton.setBounds(200, 260, 200, 50); // Position below the Admin button
+
+        // Center the Exit button horizontally
+        int exitButtonWidth = 80; // Width of the Exit button
+        int exitButtonHeight = 30; // Height of the Exit button
+        int frameWidth = frame.getWidth(); // Get the width of the frame
+        int exitButtonX = (frameWidth - exitButtonWidth) / 2; // Calculate x position to center the button
+        exitButton.setBounds(exitButtonX, 260, exitButtonWidth, exitButtonHeight); // Position below the Admin button
         frame.add(exitButton);
 
         // Make the frame visible
