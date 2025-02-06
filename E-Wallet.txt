@@ -14,6 +14,9 @@ public class EWalletApp {
     private double balance;
     private List<String> transactionHistory;
 
+    /**
+     * @wbp.parser.entryPoint
+     */
     public EWalletApp() {
         balance = 0.0;
         transactionHistory = new ArrayList<>();
@@ -23,12 +26,12 @@ public class EWalletApp {
     private void initialize() {
         frame = new JFrame("E-Wallet");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
-        frame.setLayout(new BorderLayout(10, 10));
+        frame.setSize(520, 681);
         frame.getContentPane().setBackground(Color.WHITE);
 
         // Top-up Panel
         JPanel topUpPanel = new JPanel();
+        topUpPanel.setBounds(10, 71, 486, 131);
         topUpPanel.setLayout(new GridLayout(3, 2, 10, 10));
         topUpPanel.setBorder(BorderFactory.createTitledBorder("Top-Up Wallet"));
         topUpPanel.setBackground(Color.WHITE);
@@ -39,40 +42,32 @@ public class EWalletApp {
 
         JButton topUpButton = new JButton("Top Up");
         topUpButton.addActionListener(new TopUpActionListener());
-        topUpButton.setBackground(new Color(0, 153, 76));
-        topUpButton.setForeground(Color.WHITE);
+        topUpButton.setBackground(new Color(0, 0, 128));
+        topUpButton.setForeground(UIManager.getColor("CheckBox.focus"));
 
         topUpPanel.add(amountLabel);
         topUpPanel.add(amountField);
         topUpPanel.add(new JLabel()); // Empty label for spacing
         topUpPanel.add(topUpButton);
 
-        // Back button
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(10, 10, 20, 19);
-        backButton.addActionListener(e -> {
-            frame.dispose(); // Close current window
-            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
-        });
-        //styleButton(backButton);
-        topUpPanel.add(backButton);
-        
         // Deduct Panel
         JPanel deductPanel = new JPanel();
-        deductPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        deductPanel.setBounds(0, 212, 188, 367);
         deductPanel.setBorder(BorderFactory.createTitledBorder("Deduct Wallet"));
         deductPanel.setBackground(Color.WHITE);
 
         JButton deductButton = new JButton("Pay Parking Ticket");
+        deductButton.setBounds(10, 22, 166, 335);
         deductButton.addActionListener(new DeductActionListener());
-        deductButton.setBackground(new Color(204, 0, 0));
+        deductButton.setBackground(SystemColor.activeCaption);
         deductButton.setForeground(Color.WHITE);
+        deductPanel.setLayout(null);
 
-        deductPanel.add(new JLabel()); // Empty label for spacing
         deductPanel.add(deductButton);
 
         // Balance Panel
         JPanel balancePanel = new JPanel();
+        balancePanel.setBounds(10, 589, 486, 45);
         balancePanel.setLayout(new BorderLayout());
         balancePanel.setBorder(BorderFactory.createTitledBorder("Wallet Balance"));
         balancePanel.setBackground(Color.WHITE);
@@ -83,6 +78,7 @@ public class EWalletApp {
 
         // Transaction History Panel
         JPanel transactionHistoryPanel = new JPanel();
+        transactionHistoryPanel.setBounds(198, 212, 298, 367);
         transactionHistoryPanel.setLayout(new BorderLayout());
         transactionHistoryPanel.setBorder(BorderFactory.createTitledBorder("Transaction History"));
         transactionHistoryPanel.setBackground(Color.WHITE);
@@ -92,14 +88,29 @@ public class EWalletApp {
         transactionHistoryArea.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(transactionHistoryArea);
         transactionHistoryPanel.add(scrollPane, BorderLayout.CENTER);
+        frame.getContentPane().setLayout(null);
 
         // Adding Panels to Frame
-        frame.add(topUpPanel, BorderLayout.NORTH);
-        frame.add(deductPanel, BorderLayout.CENTER);
-        frame.add(balancePanel, BorderLayout.SOUTH);
-        frame.add(transactionHistoryPanel, BorderLayout.EAST);
+        frame.getContentPane().add(topUpPanel);
+        frame.getContentPane().add(deductPanel);
+        frame.getContentPane().add(balancePanel);
+        frame.getContentPane().add(transactionHistoryPanel);
+        
+                JButton backButton = new JButton("Back");
+                backButton.setBounds(10, 10, 101, 28);
+                frame.getContentPane().add(backButton);
+                backButton.addActionListener(e -> frame.dispose());
+                styleBackButton(backButton);
 
         frame.setVisible(true);
+    }
+
+    private void styleBackButton(JButton button) {
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(UIManager.getFont("Button.font"));
+        button.setMargin(new Insets(5, 15, 5, 15));
     }
 
     private class TopUpActionListener implements ActionListener {
