@@ -19,7 +19,6 @@ public class Admin {
         updateParkingDisplay(parkingSpotPanel);
     }
 
-
     public Admin() {
         userDatabase = new HashMap<>();
         userDatabase.put("admin", "123"); // Sample Admin Account
@@ -45,12 +44,40 @@ public class Admin {
         frame.setVisible(true);
     }
     
-    
     private void initializeParkingData() {
+        // Existing parking spots
         parkingSpots.add(new String[]{"V001", "Visitor", "Vacant"});
         parkingSpots.add(new String[]{"V002", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"5001", "Staff", "Vacant"});
+        parkingSpots.add(new String[]{"V003", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V004", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V005", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V006", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V007", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V008", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V009", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V010", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V011", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V012", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V013", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V014", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V015", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V016", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V017", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V018", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V019", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V020", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V021", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V022", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V023", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V024", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V025", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V026", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V027", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V028", "Visitor", "Occupied"});
+        parkingSpots.add(new String[]{"V029", "Visitor", "Vacant"});
+        parkingSpots.add(new String[]{"V030", "Visitor", "Occupied"});
     }
+
 
     private void initLoginPanel() {
         JPanel loginPanel = new JPanel(new GridBagLayout());
@@ -98,6 +125,7 @@ public class Admin {
             if (userDatabase.containsKey(username) && userDatabase.get(username).equals(password)) {
                 JOptionPane.showMessageDialog(frame, "Login successful!");
                 cardLayout.show(mainPanel, "HomePanel");
+                refreshParkingDisplay();  // Ensure parking data is displayed when home panel is shown
             } else {
                 JOptionPane.showMessageDialog(frame, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -111,7 +139,6 @@ public class Admin {
         mainPanel.add(loginPanel, "LoginPanel");
     }
 
-    
     private void initHomePanel() {
         JPanel homePanel = new JPanel();
         homePanel.setLayout(new BorderLayout());
@@ -130,14 +157,17 @@ public class Admin {
         JButton manageParkingSpotButton = new JButton("Manage Parking Spot");
         manageParkingSpotButton.addActionListener(e -> cardLayout.show(mainPanel, "ManagePanel"));
         styleButton(manageParkingSpotButton);
-        manageParkingSpotButton.setPreferredSize(new Dimension(150, 40)); 
+        manageParkingSpotButton.setPreferredSize(new Dimension(200, 50));  // Adjusted size for better fitting
         gbc.gridx = 0;
         gbc.gridy = 0;
         buttonPanel.add(manageParkingSpotButton, gbc);
-
+        
         // Logout Button
         JButton logoutButton = new JButton("Logout");
-        logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "LoginPanel"));
+        logoutButton.addActionListener(e -> {
+            cardLayout.show(mainPanel, "LoginPanel");
+            refreshParkingDisplay();  // Ensure parking data is displayed when going back to login panel
+        });
         styleButton(logoutButton);
         logoutButton.setPreferredSize(new Dimension(150, 40)); // Set preferred size
         gbc.gridx = 0;
@@ -149,19 +179,22 @@ public class Admin {
 
         // Create a panel to display parking spots
         parkingSpotPanel = new JPanel();
-        parkingSpotPanel.setLayout(new GridLayout(0, 3, 10, 10)); // Dynamic rows, 3 columns, with gaps
+        parkingSpotPanel.setLayout(new GridLayout(0, 2, 10, 10)); // Dynamic rows, 3 columns, with gaps
         parkingSpotPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         parkingSpotPanel.setBackground(Color.WHITE);
 
-        // Add parking spot information to the panel
-        updateParkingDisplay(parkingSpotPanel);
+        // Wrap the parkingSpotPanel inside a JScrollPane for scrolling
+        JScrollPane scrollPane = new JScrollPane(parkingSpotPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the scroll pane
 
-        // Add the parking spot panel to the center of the home panel
-        homePanel.add(parkingSpotPanel, BorderLayout.CENTER);
+        // Add the parking spot panel (inside the scroll pane) to the center of the home panel
+        homePanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Ensure parking data is displayed when the home panel is shown
+        refreshParkingDisplay();
 
         mainPanel.add(homePanel, "HomePanel");
     }
-    
     
     private void updateParkingDisplay(JPanel parkingSpotPanel) {
         parkingSpotPanel.removeAll(); // Clear existing panels
@@ -170,6 +203,8 @@ public class Admin {
             JPanel spotPanel = new JPanel();
             spotPanel.setLayout(new BorderLayout());
             spotPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            spotPanel.setPreferredSize(new Dimension(100, 50)); // Set fixed size for rectangle appearance (width: 150, height: 50)
+            spotPanel.setBackground(Color.LIGHT_GRAY); // Optional: Set a background color for better visibility
 
             JLabel spotLabel = new JLabel("Spot: " + spot[0], SwingConstants.CENTER);
             JLabel typeLabel = new JLabel("Type: " + spot[1], SwingConstants.CENTER);
