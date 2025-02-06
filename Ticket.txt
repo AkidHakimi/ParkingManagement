@@ -58,7 +58,7 @@ public class TicketManagementApp {
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
         ticketPanel.add(welcomeLabel);
 
-        JPanel centerPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        JPanel centerPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         centerPanel.setBounds(83, 49, 383, 294);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -86,6 +86,10 @@ public class TicketManagementApp {
         JButton popupHistoryButton = new JButton("Show Ticket History");
         popupHistoryButton.addActionListener(new PopupHistoryActionListener());
         styleButton(popupHistoryButton);
+        
+        JButton payParkingButton = new JButton("Pay Parking");
+        payParkingButton.addActionListener(new PayParkingActionListener());
+        styleButton(payParkingButton);
 
         centerPanel.add(startTimeLabel);
         centerPanel.add(startTimeField);
@@ -98,6 +102,7 @@ public class TicketManagementApp {
         centerPanel.add(viewHistoryButton);
         centerPanel.add(calculateButton);
         centerPanel.add(popupHistoryButton);
+        centerPanel.add(payParkingButton);
 
         ticketPanel.add(centerPanel);
         mainPanel.add(ticketPanel, "TicketPanel");
@@ -172,6 +177,14 @@ public class TicketManagementApp {
                 historyContent.append(ticket).append("\n");
             }
             JOptionPane.showMessageDialog(frame, historyContent.toString(), "Ticket History", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private class PayParkingActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Launch the EWalletApp
+            SwingUtilities.invokeLater(EWalletApp::new);
         }
     }
 
