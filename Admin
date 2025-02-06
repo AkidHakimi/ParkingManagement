@@ -1,0 +1,181 @@
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Admin {
+    private JFrame frame;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private Map<String, String> userDatabase;
+
+    public Admin() {
+        userDatabase = new HashMap<>();
+        userDatabase.put("admin", "123"); // Sample Admin Account
+
+        frame = new JFrame("Admin Login");
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        initLoginPanel();
+        initHomePanel();  // Ensure Home Panel Exists
+
+        frame.add(mainPanel);
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setVisible(true);
+    }
+
+    private void initLoginPanel() {
+        JPanel loginPanel = new JPanel(new GridBagLayout());
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("Admin Login", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        loginPanel.add(titleLabel, gbc);
+
+        gbc.gridwidth = 1;
+
+        JLabel usernameLabel = new JLabel("Username:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        loginPanel.add(usernameLabel, gbc);
+
+        usernameField = new JTextField();
+        usernameField.setPreferredSize(new Dimension(200, 25)); // Set same size
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        loginPanel.add(usernameField, gbc);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        loginPanel.add(passwordLabel, gbc);
+
+        passwordField = new JPasswordField();
+        passwordField.setPreferredSize(new Dimension(200, 25)); // Set same size
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        loginPanel.add(passwordField, gbc);
+
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(e -> {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+
+            if (userDatabase.containsKey(username) && userDatabase.get(username).equals(password)) {
+                JOptionPane.showMessageDialog(frame, "Login successful!");
+                cardLayout.show(mainPanel, "HomePanel");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        styleButton(loginButton);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        loginPanel.add(loginButton, gbc);
+
+        mainPanel.add(loginPanel, "LoginPanel");
+    }
+
+    private void initHomePanel() {
+        JPanel homePanel = new JPanel();
+        homePanel.setLayout(new BorderLayout());
+
+        JLabel welcomeLabel = new JLabel("Welcome, Admin!", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        homePanel.add(welcomeLabel, BorderLayout.NORTH);
+
+        // Create a panel for the buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(3, 1, 10, 10)); // 3 rows, 1 column, with gaps
+
+        // Add Parking Spot Button
+        JButton addParkingSpotButton = new JButton("Add Parking Spot");
+        addParkingSpotButton.addActionListener(e -> {
+            // Add logic to handle adding a parking spot
+            System.out.println("Add Parking Spot button clicked");
+        });
+        styleButton(addParkingSpotButton);
+        buttonPanel.add(addParkingSpotButton);
+
+        // Remove Car Button
+        JButton removeCarButton = new JButton("Remove Car");
+        removeCarButton.addActionListener(e -> {
+            // Add logic to handle removing a car
+            System.out.println("Remove Car button clicked");
+        });
+        styleButton(removeCarButton);
+        buttonPanel.add(removeCarButton);
+
+        // Logout Button
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "LoginPanel"));
+        styleButton(logoutButton);
+        buttonPanel.add(logoutButton);
+
+        // Add the button panel to the west of the home panel
+        homePanel.add(buttonPanel, BorderLayout.WEST);
+
+        // Create a panel to display parking spots
+        JPanel parkingSpotPanel = new JPanel();
+        parkingSpotPanel.setLayout(new GridLayout(0, 3, 10, 10)); // Dynamic rows, 3 columns, with gaps
+        parkingSpotPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        parkingSpotPanel.setBackground(Color.WHITE);
+
+        // Sample data for parking spots
+        String[][] parkingSpots = {
+            {"V001", "Visitor", "Vacant"},
+            {"V002", "Visitor", "Vacant"},
+            {"V003", "Visitor", "Vacant"},
+            {"5001", "Staff", "Vacant"},
+            {"5002", "Staff", "Vacant"},
+            {"5003", "Staff", "Vacant"}
+        };
+
+        // Add parking spot information to the panel
+        for (String[] spot : parkingSpots) {
+            JPanel spotPanel = new JPanel();
+            spotPanel.setLayout(new BorderLayout());
+            spotPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+            JLabel spotLabel = new JLabel("Spot: " + spot[0], SwingConstants.CENTER);
+            JLabel typeLabel = new JLabel("Type: " + spot[1], SwingConstants.CENTER);
+            JLabel statusLabel = new JLabel("Status: " + spot[2], SwingConstants.CENTER);
+
+            spotPanel.add(spotLabel, BorderLayout.NORTH);
+            spotPanel.add(typeLabel, BorderLayout.CENTER);
+            spotPanel.add(statusLabel, BorderLayout.SOUTH);
+
+            parkingSpotPanel.add(spotPanel);
+        }
+
+        // Add the parking spot panel to the center of the home panel
+        homePanel.add(parkingSpotPanel, BorderLayout.CENTER);
+
+        mainPanel.add(homePanel, "HomePanel");
+    }
+
+    private void styleButton(JButton button) {
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setBackground(new Color(59, 89, 182));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Admin::new);
+    }
+}
