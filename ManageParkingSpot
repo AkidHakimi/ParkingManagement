@@ -27,11 +27,17 @@ public class ManageParkingSpot {
 
         // Back Button
         JButton backButton = new JButton("Back");
+        backButton.setPreferredSize(new Dimension(80, 30));  // Make the button smaller
         backButton.addActionListener(e -> {
             admin.refreshParkingDisplay(); // Refresh the Admin panel
             cardLayout.show(mainPanel, "HomePanel"); // Navigate back to the home panel
         });
-        managePanel.add(backButton, BorderLayout.NORTH);
+        styleButton(backButton); // Apply the same style to the back button
+
+        // Set the back button in the top-left corner
+        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));  // FlowLayout for left alignment
+        backPanel.add(backButton);
+        managePanel.add(backPanel, BorderLayout.NORTH);
 
         // Parking List
         listModel = new DefaultListModel<>();
@@ -47,11 +53,24 @@ public class ManageParkingSpot {
         updateButton.addActionListener(e -> updateAvailability());
         removeButton.addActionListener(e -> removeParkingSpot());
 
+        // Style the buttons
+        styleButton(updateButton);
+        styleButton(removeButton);
+
         buttonPanel.add(updateButton);
         buttonPanel.add(removeButton);
         managePanel.add(buttonPanel, BorderLayout.SOUTH);
 
         mainPanel.add(managePanel, "ManagePanel");
+    }
+
+    private void styleButton(JButton button) {
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setBackground(new Color(59, 89, 182)); // Apply same background color
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
     }
 
     private void updateParkingList() {
