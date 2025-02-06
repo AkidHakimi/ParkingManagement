@@ -13,6 +13,12 @@ public class Admin {
     private JPasswordField passwordField;
     private Map<String, String> userDatabase;
     private List<String[]> parkingSpots;
+    private JPanel parkingSpotPanel; 
+    
+    public void refreshParkingDisplay() {
+        updateParkingDisplay(parkingSpotPanel);
+    }
+
 
     public Admin() {
         userDatabase = new HashMap<>();
@@ -28,8 +34,8 @@ public class Admin {
         initLoginPanel();
         initHomePanel();  // Ensure Home Panel Exists
 
-        // Pass the parkingSpots data to ManageParkingSpot
-        ManageParkingSpot manageParkingSpot = new ManageParkingSpot(frame, mainPanel, cardLayout, parkingSpots);
+        // Pass the parkingSpots data and Admin instance to ManageParkingSpot
+        ManageParkingSpot manageParkingSpot = new ManageParkingSpot(frame, mainPanel, cardLayout, parkingSpots, this);
         mainPanel.add(manageParkingSpot.getManagePanel(), "ManagePanel");
 
         frame.add(mainPanel);
@@ -38,7 +44,8 @@ public class Admin {
         frame.setLocationRelativeTo(null); // Center the frame
         frame.setVisible(true);
     }
-
+    
+    
     private void initializeParkingData() {
         parkingSpots.add(new String[]{"V001", "Visitor", "Vacant"});
         parkingSpots.add(new String[]{"V002", "Visitor", "Occupied"});
@@ -141,7 +148,7 @@ public class Admin {
         homePanel.add(buttonPanel, BorderLayout.WEST);
 
         // Create a panel to display parking spots
-        JPanel parkingSpotPanel = new JPanel();
+        parkingSpotPanel = new JPanel();
         parkingSpotPanel.setLayout(new GridLayout(0, 3, 10, 10)); // Dynamic rows, 3 columns, with gaps
         parkingSpotPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         parkingSpotPanel.setBackground(Color.WHITE);
@@ -154,7 +161,8 @@ public class Admin {
 
         mainPanel.add(homePanel, "HomePanel");
     }
-
+    
+    
     private void updateParkingDisplay(JPanel parkingSpotPanel) {
         parkingSpotPanel.removeAll(); // Clear existing panels
 
