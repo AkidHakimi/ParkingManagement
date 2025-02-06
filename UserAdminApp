@@ -1,0 +1,83 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class UserAdminApp {
+
+    private JFrame frame;
+
+    public UserAdminApp() {
+        // Initialize the main frame
+        frame = new JFrame("Parking Management System"); // Set title
+        frame.setSize(600, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(null); // Use absolute positioning
+
+        // Title Label
+        JLabel titleLabel = new JLabel("Parking System Management");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setBounds(100, 30, 400, 50); // Adjust position and size
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Center the text
+        frame.add(titleLabel);
+
+        // Create the User button
+        JButton userButton = new JButton("User");
+        userButton.addActionListener(e -> {
+            // Open the User interface
+            new RegistrationApp(); // Create and display the RegistrationApp
+        });
+        styleButton(userButton);
+        userButton.setBounds(200, 120, 200, 50); // Adjusted y position
+        frame.add(userButton);
+
+        // Create the Admin button
+        JButton adminButton = new JButton("Admin");
+        adminButton.addActionListener(e -> {
+            // Open the Admin interface
+            new RegistrationApp(); // Create and display the RegistrationApp
+        });
+        styleButton(adminButton);
+        adminButton.setBounds(200, 190, 200, 50); // Adjusted y position
+        frame.add(adminButton);
+
+        // Create the Exit button
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(e -> {
+            // Exit the application
+            int confirm = JOptionPane.showConfirmDialog(
+                    frame,
+                    "Are you sure you want to exit?",
+                    "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.exit(0); // Close the application
+            }
+        });
+        styleButton(exitButton);
+        exitButton.setBounds(200, 260, 200, 50); // Position below the Admin button
+        frame.add(exitButton);
+
+        // Make the frame visible
+        frame.setVisible(true);
+    }
+
+    // Method to style buttons
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new UserAdminApp();
+            }
+        });
+    }
+}
