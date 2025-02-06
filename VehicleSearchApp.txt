@@ -1,9 +1,12 @@
+//VehicleSearchApp
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class VehicleSearchApp {
     private JFrame frame;
@@ -36,10 +39,22 @@ public class VehicleSearchApp {
     }
 
     private void initSearchPanel() {
+    	
+    	
         JPanel searchPanel = new JPanel(new BorderLayout(10, 10));
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(35, 35, 35, 35));
         searchPanel.setBackground(Color.WHITE);
-
+        
+     // Back button
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(10, 10, 70, 20);
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close current window
+            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
+        });
+        styleButton(backButton);
+        searchPanel.add(backButton);
+       
         JLabel searchLabel = new JLabel("Enter License Plate Number:");
         searchLabel.setFont(new Font("Arial", Font.BOLD, 14));
         searchPanel.add(searchLabel, BorderLayout.NORTH);
@@ -47,12 +62,18 @@ public class VehicleSearchApp {
         searchField = new JTextField();
         searchPanel.add(searchField, BorderLayout.CENTER);
 
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new SearchActionListener());
         styleButton(searchButton);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JButton randomButton = new JButton("Random Plate Number");
+        randomButton.addActionListener(new RandomActionListener());
+        styleButton(randomButton);
+
         buttonPanel.add(searchButton);
+        buttonPanel.add(randomButton);
         searchPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         frame.add(searchPanel, BorderLayout.NORTH);
@@ -93,6 +114,26 @@ public class VehicleSearchApp {
                 resultArea.setText("Vehicle not found.");
             }
         }
+    }
+
+    private class RandomActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String randomPlateNumber = generateRandomPlateNumber();
+            searchField.setText(randomPlateNumber);
+        }
+    }
+
+    private String generateRandomPlateNumber() {
+        Random random = new Random();
+        StringBuilder plateNumber = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            plateNumber.append((char) ('A' + random.nextInt(26)));
+        }
+        for (int i = 0; i < 4; i++) {
+            plateNumber.append(random.nextInt(10));
+        }
+        return plateNumber.toString();
     }
 
     private void styleButton(JButton button) {
