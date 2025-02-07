@@ -86,11 +86,23 @@ public class Admin {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titleLabel = new JLabel("Admin Login", SwingConstants.LEFT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        // Back Button
+        JButton backButton = new JButton("Back");
+        styleButton(backButton);
+        backButton.addActionListener(e -> {
+            frame.dispose();  // Close admin login frame
+            new UserAdminApp();  // Open the UserAdminApp frame
+        });
+
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
+        loginPanel.add(backButton, gbc);
+
+        JLabel titleLabel = new JLabel("Admin Login", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 1;
+        gbc.gridy = 0;
         loginPanel.add(titleLabel, gbc);
 
         gbc.gridwidth = 1;
@@ -101,7 +113,7 @@ public class Admin {
         loginPanel.add(usernameLabel, gbc);
 
         usernameField = new JTextField();
-        usernameField.setPreferredSize(new Dimension(200, 25)); // Set same size
+        usernameField.setPreferredSize(new Dimension(200, 25)); 
         gbc.gridx = 1;
         gbc.gridy = 1;
         loginPanel.add(usernameField, gbc);
@@ -112,7 +124,7 @@ public class Admin {
         loginPanel.add(passwordLabel, gbc);
 
         passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(200, 25)); // Set same size
+        passwordField.setPreferredSize(new Dimension(200, 25));
         gbc.gridx = 1;
         gbc.gridy = 2;
         loginPanel.add(passwordField, gbc);
@@ -125,7 +137,7 @@ public class Admin {
             if (userDatabase.containsKey(username) && userDatabase.get(username).equals(password)) {
                 JOptionPane.showMessageDialog(frame, "Login successful!");
                 cardLayout.show(mainPanel, "HomePanel");
-                refreshParkingDisplay();  // Ensure parking data is displayed when home panel is shown
+                refreshParkingDisplay();  
             } else {
                 JOptionPane.showMessageDialog(frame, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -138,6 +150,7 @@ public class Admin {
 
         mainPanel.add(loginPanel, "LoginPanel");
     }
+
 
     private void initHomePanel() {
         JPanel homePanel = new JPanel();
