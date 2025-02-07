@@ -43,13 +43,14 @@ public class RegistrationApp {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         //Back button
-        JButton backButton = new JButton("Exit");
+        JButton backButton = new JButton("Back");
         styleButton(backButton);
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;
         backButton.addActionListener(e -> {
             frame.dispose();
+            new UserAdminApp();
         });
         registrationPanel.add(backButton, gbc);
 
