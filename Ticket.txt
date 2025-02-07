@@ -21,8 +21,11 @@ public class TicketManagementApp {
     private JTextField amountField;
     private JTextArea historyTextArea;
     private List<Ticket> tickets;
+    private double eWalletBalance;
+    private RegistrationApp registrationApp;
 
-    public TicketManagementApp() {
+    public TicketManagementApp(RegistrationApp registrationApp) {
+        this.registrationApp = registrationApp;
         tickets = new ArrayList<>();
         frame = new JFrame("Ticket Management System");
         cardLayout = new CardLayout();
@@ -184,6 +187,10 @@ public class TicketManagementApp {
         mainPanel.add(historyPanel, "HistoryPanel");
     }
 
+    public void updateEWalletBalance(double balance) {
+        this.eWalletBalance = balance;
+    }
+
     private void updateHistoryTextArea() {
         StringBuilder historyContent = new StringBuilder();
         for (Ticket ticket : tickets) {
@@ -239,7 +246,7 @@ public class TicketManagementApp {
             try {
                 double amount = Double.parseDouble(amountField.getText().replace("RM ", ""));
                 // Launch the EWalletApp with the amount to be paid
-                SwingUtilities.invokeLater(() -> new EWalletApp(amount));
+                SwingUtilities.invokeLater(() -> new EWalletApp(registrationApp, amount));
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Invalid amount. Please calculate the amount first.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -254,7 +261,7 @@ public class TicketManagementApp {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TicketManagementApp::new);
+        SwingUtilities.invokeLater(() -> new TicketManagementApp(null));
     }
 }
 
@@ -276,6 +283,6 @@ class Ticket {
 
     @Override
     public String toString() {
-        return "Date: " + date + ", Start: " + startTime + ", End: " + endTime + ", Plate: " + plateNumber + ", Amount: RM " + amount;
+        return String.format("Date: %s, Start: %s, End: %s, Plate: %s, Amount: RM %.2f", date, startTime, endTime, plateNumber, amount);
     }
 }
