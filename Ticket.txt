@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,9 +15,9 @@ public class TicketManagementApp {
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private JTextField startTimeField;
-    private JTextField endTimeField;
     private JTextField dateField;
-    private JTextField PlateNoField;
+    private JTextField plateNumberField;
+    private JTextField endTimeField;
     private JTextField amountField;
     private JTextArea historyTextArea;
     private List<Ticket> tickets;
@@ -29,90 +28,138 @@ public class TicketManagementApp {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        initTicketPanel();
+        initStartTicketPanel();
+        initEndTicketPanel();
         initHistoryPanel();
 
         frame.getContentPane().add(mainPanel);
-        frame.setSize(500, 400);
+        frame.setSize(600, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
-    private void initTicketPanel() {
-        JPanel ticketPanel = new JPanel();
-        ticketPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        ticketPanel.setLayout(null);
+    private void initStartTicketPanel() {
+        JPanel startTicketPanel = new JPanel(new GridBagLayout());
+        startTicketPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Back button
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(13, 13, 69, 22);
-        backButton.addActionListener(e -> {
-            frame.dispose(); // Close current window
-            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
-        });
-        styleButton(backButton);
-        ticketPanel.add(backButton);
+        JLabel titleLabel = new JLabel("Start Ticket", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        startTicketPanel.add(titleLabel, gbc);
 
-        JLabel welcomeLabel = new JLabel("Ticket Management System", SwingConstants.CENTER);
-        welcomeLabel.setBounds(20, 20, 446, 19);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        ticketPanel.add(welcomeLabel);
-
-        JPanel centerPanel = new JPanel(new GridLayout(7, 2, 10, 10));
-        centerPanel.setBounds(83, 49, 383, 294);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        gbc.gridwidth = 1;
 
         JLabel startTimeLabel = new JLabel("Start Time (HH:mm):");
-        startTimeField = new JTextField();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        startTicketPanel.add(startTimeLabel, gbc);
 
-        JLabel endTimeLabel = new JLabel("End Time (HH:mm):");
-        endTimeField = new JTextField();
+        startTimeField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        startTicketPanel.add(startTimeField, gbc);
 
         JLabel dateLabel = new JLabel("Date (yyyy-MM-dd):");
-        dateField = new JTextField();
-        
-        JLabel PlateNoLabel = new JLabel("Plate No (UKM 1):");
-        PlateNoField = new JTextField();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        startTicketPanel.add(dateLabel, gbc);
+
+        dateField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        startTicketPanel.add(dateField, gbc);
+
+        JLabel plateNumberLabel = new JLabel("Plate Number:");
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        startTicketPanel.add(plateNumberLabel, gbc);
+
+        plateNumberField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        startTicketPanel.add(plateNumberField, gbc);
+
+        JButton nextButton = new JButton("Next");
+        nextButton.addActionListener(e -> cardLayout.show(mainPanel, "EndTicketPanel"));
+        styleButton(nextButton);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        startTicketPanel.add(nextButton, gbc);
+
+        mainPanel.add(startTicketPanel, "StartTicketPanel");
+    }
+
+    private void initEndTicketPanel() {
+        JPanel endTicketPanel = new JPanel(new GridBagLayout());
+        endTicketPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("End Ticket", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        endTicketPanel.add(titleLabel, gbc);
+
+        gbc.gridwidth = 1;
+
+        JLabel endTimeLabel = new JLabel("End Time (HH:mm):");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        endTicketPanel.add(endTimeLabel, gbc);
+
+        endTimeField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        endTicketPanel.add(endTimeField, gbc);
 
         JLabel amountLabel = new JLabel("Amount (RM):");
-        amountField = new JTextField();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        endTicketPanel.add(amountLabel, gbc);
+
+        amountField = new JTextField(20);
         amountField.setEditable(false);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        endTicketPanel.add(amountField, gbc);
 
         JButton calculateButton = new JButton("Calculate Amount");
         calculateButton.addActionListener(new CalculateActionListener());
         styleButton(calculateButton);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        endTicketPanel.add(calculateButton, gbc);
 
         JButton viewHistoryButton = new JButton("View Ticket History");
         viewHistoryButton.addActionListener(e -> cardLayout.show(mainPanel, "HistoryPanel"));
         styleButton(viewHistoryButton);
+        gbc.gridy = 4;
+        endTicketPanel.add(viewHistoryButton, gbc);
 
         JButton popupHistoryButton = new JButton("Show Ticket History");
         popupHistoryButton.addActionListener(new PopupHistoryActionListener());
         styleButton(popupHistoryButton);
-        
+        gbc.gridy = 5;
+        endTicketPanel.add(popupHistoryButton, gbc);
+
         JButton payParkingButton = new JButton("Pay Parking");
         payParkingButton.addActionListener(new PayParkingActionListener());
         styleButton(payParkingButton);
-        frame.dispose();
+        gbc.gridy = 6;
+        endTicketPanel.add(payParkingButton, gbc);
 
-        centerPanel.add(startTimeLabel);
-        centerPanel.add(startTimeField);
-        centerPanel.add(endTimeLabel);
-        centerPanel.add(endTimeField);
-        centerPanel.add(dateLabel);
-        centerPanel.add(dateField);
-        centerPanel.add(PlateNoLabel);
-        centerPanel.add(PlateNoField);
-        centerPanel.add(amountLabel);
-        centerPanel.add(amountField);
-        centerPanel.add(viewHistoryButton);
-        centerPanel.add(calculateButton);
-        centerPanel.add(popupHistoryButton);
-        centerPanel.add(payParkingButton);
-
-        ticketPanel.add(centerPanel);
-        mainPanel.add(ticketPanel, "TicketPanel");
+        mainPanel.add(endTicketPanel, "EndTicketPanel");
     }
 
     private void initHistoryPanel() {
@@ -130,7 +177,7 @@ public class TicketManagementApp {
         historyPanel.add(scrollPane, BorderLayout.CENTER);
 
         JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "TicketPanel"));
+        backButton.addActionListener(e -> cardLayout.show(mainPanel, "EndTicketPanel"));
         styleButton(backButton);
 
         historyPanel.add(backButton, BorderLayout.SOUTH);
@@ -150,11 +197,10 @@ public class TicketManagementApp {
         public void actionPerformed(ActionEvent e) {
             try {
                 DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
                 LocalTime startTime = LocalTime.parse(startTimeField.getText(), timeFormatter);
                 LocalTime endTime = LocalTime.parse(endTimeField.getText(), timeFormatter);
-                LocalDate date = LocalDate.parse(dateField.getText(), dateFormatter);
+                String date = dateField.getText();
+                String plateNumber = plateNumberField.getText();
 
                 if (endTime.isBefore(startTime)) {
                     JOptionPane.showMessageDialog(frame, "End time must be after start time.");
@@ -167,7 +213,7 @@ public class TicketManagementApp {
                 DecimalFormat df = new DecimalFormat("#0.00");
                 amountField.setText("RM " + df.format(amount));
 
-                Ticket ticket = new Ticket(startTimeField.getText(), endTimeField.getText(), dateField.getText(),PlateNoField.getText(), amount);
+                Ticket ticket = new Ticket(startTimeField.getText(), endTimeField.getText(), date, plateNumber, amount);
                 tickets.add(ticket);
                 updateHistoryTextArea();
             } catch (Exception ex) {
@@ -190,9 +236,13 @@ public class TicketManagementApp {
     private class PayParkingActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            frame.dispose();
-            // Launch the EWalletApp
-            SwingUtilities.invokeLater(EWalletApp::new);
+            try {
+                double amount = Double.parseDouble(amountField.getText().replace("RM ", ""));
+                // Launch the EWalletApp with the amount to be paid
+                SwingUtilities.invokeLater(() -> new EWalletApp(amount));
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Invalid amount. Please calculate the amount first.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -213,19 +263,19 @@ class Ticket {
     private String startTime;
     private String endTime;
     private String date;
-    private String plateNo;
+    private String plateNumber;
     private double amount;
 
-    public Ticket(String startTime, String endTime, String date, String plateNo, double amount) {
+    public Ticket(String startTime, String endTime, String date, String plateNumber, double amount) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.date = date;
-        this.plateNo = plateNo;
+        this.plateNumber = plateNumber;
         this.amount = amount;
     }
 
     @Override
     public String toString() {
-        return "Date: " + date + ", \nStart: " + startTime + ", \nEnd: " + endTime + ", \nPlate No: " + plateNo + ", \nAmount: RM " + amount;
+        return "Date: " + date + ", Start: " + startTime + ", End: " + endTime + ", Plate: " + plateNumber + ", Amount: RM " + amount;
     }
 }
