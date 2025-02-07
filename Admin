@@ -46,36 +46,38 @@ public class Admin {
     
     private void initializeParkingData() {
         // Existing parking spots
-        parkingSpots.add(new String[]{"V001", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V002", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V003", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V004", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V005", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V006", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V007", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V008", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V009", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V010", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V011", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V012", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V013", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V014", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V015", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V016", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V017", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V018", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V019", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V020", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V021", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V022", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V023", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V024", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V025", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V026", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V027", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V028", "Visitor", "Occupied"});
-        parkingSpots.add(new String[]{"V029", "Visitor", "Vacant"});
-        parkingSpots.add(new String[]{"V030", "Visitor", "Occupied"});
+    	parkingSpots.add(new String[]{"AL201", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL202", "BBA 123", "Occupied"});
+    	parkingSpots.add(new String[]{"AL203", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL204", "CCA 456", "Occupied"});
+    	parkingSpots.add(new String[]{"AL205", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL206", "DDA 789", "Occupied"});
+    	parkingSpots.add(new String[]{"AL207", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL208", "UKM 100", "Vacant"});   //Blok A, Level2, spot 08
+    	parkingSpots.add(new String[]{"AL209", "EEA 234", "Occupied"});
+    	parkingSpots.add(new String[]{"AL210", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL211", "FFA 567", "Occupied"});
+    	parkingSpots.add(new String[]{"AL212", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL213", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL214", "GGA 890", "Occupied"});
+    	parkingSpots.add(new String[]{"AL215", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL216", "HHA 123", "Occupied"});
+    	parkingSpots.add(new String[]{"AL217", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL218", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL219", "IIA 456", "Occupied"});
+    	parkingSpots.add(new String[]{"AL220", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL221", "JJA 789", "Occupied"});
+    	parkingSpots.add(new String[]{"AL222", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL223", "KKA 234", "Occupied"});
+    	parkingSpots.add(new String[]{"AL224", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL225", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL226", "LLA 567", "Occupied"});
+    	parkingSpots.add(new String[]{"AL227", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL228", "MMA 890", "Occupied"});
+    	parkingSpots.add(new String[]{"AL229", "No Car", "Vacant"});
+    	parkingSpots.add(new String[]{"AL230", "NNA 123", "Occupied"});
+
+
     }
 
 
