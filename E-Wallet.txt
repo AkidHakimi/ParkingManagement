@@ -33,8 +33,6 @@ public class EWalletApp {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(520, 681);
         frame.getContentPane().setBackground(Color.WHITE);
-        frame.setLocationRelativeTo(null); // Center the frame
-
 
         // Top-up Panel
         JPanel topUpPanel = new JPanel();
