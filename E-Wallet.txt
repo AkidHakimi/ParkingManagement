@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +15,16 @@ public class EWalletApp {
     private double balance;
     private List<String> transactionHistory;
     private double amountToPay;
+    private RegistrationApp registrationApp;
 
     /**
      * @wbp.parser.entryPoint
      */
-    public EWalletApp(double amountToPay) {
+    public EWalletApp(RegistrationApp registrationApp, double amountToPay) {
+        this.registrationApp = registrationApp;
         this.amountToPay = amountToPay;
-        balance = 0.0;
         transactionHistory = new ArrayList<>();
+        loadBalance();
         initialize();
     }
 
@@ -74,7 +77,7 @@ public class EWalletApp {
         balancePanel.setBorder(BorderFactory.createTitledBorder("Wallet Balance"));
         balancePanel.setBackground(Color.WHITE);
 
-        balanceLabel = new JLabel("Balance: RM0.00", SwingConstants.CENTER);
+        balanceLabel = new JLabel(String.format("Balance: RM%.2f", balance), SwingConstants.CENTER);
         balanceLabel.setFont(new Font("Arial", Font.BOLD, 20));
         balancePanel.add(balanceLabel, BorderLayout.CENTER);
 
@@ -97,12 +100,15 @@ public class EWalletApp {
         frame.getContentPane().add(deductPanel);
         frame.getContentPane().add(balancePanel);
         frame.getContentPane().add(transactionHistoryPanel);
-        
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(10, 10, 101, 28);
-        frame.getContentPane().add(backButton);
-        backButton.addActionListener(e -> frame.dispose());
-        styleBackButton(backButton);
+
+        JButton mainMenuButton = new JButton("Main Menu");
+        mainMenuButton.setBounds(10, 10, 101, 28);
+        frame.getContentPane().add(mainMenuButton);
+        mainMenuButton.addActionListener(e -> {
+            frame.dispose();
+            registrationApp.showHomePanel();
+        });
+        styleBackButton(mainMenuButton);
 
         frame.setVisible(true);
     }
@@ -136,6 +142,9 @@ public class EWalletApp {
 
                 // Clear the amount field
                 amountField.setText("");
+
+                // Save the balance
+                saveBalance();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Invalid amount. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -155,6 +164,12 @@ public class EWalletApp {
 
                 // Notify user of successful deduction
                 JOptionPane.showMessageDialog(frame, "Payment successful!", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+
+                // Popup notification for successful payment
+                JOptionPane.showMessageDialog(frame, transaction, "Payment Notification", JOptionPane.INFORMATION_MESSAGE);
+
+                // Save the balance
+                saveBalance();
             } else {
                 // Notify user of insufficient funds
                 JOptionPane.showMessageDialog(frame, "Insufficient funds. Please top-up your wallet.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -162,7 +177,23 @@ public class EWalletApp {
         }
     }
 
+    private void saveBalance() {
+        try (FileWriter writer = new FileWriter("ewallet_balance.txt")) {
+            writer.write(String.valueOf(balance));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadBalance() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("ewallet_balance.txt"))) {
+            balance = Double.parseDouble(reader.readLine());
+        } catch (IOException | NumberFormatException e) {
+            balance = 0.0;
+        }
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EWalletApp(0.0));
+        SwingUtilities.invokeLater(() -> new EWalletApp(null, 0.0));
     }
 }
