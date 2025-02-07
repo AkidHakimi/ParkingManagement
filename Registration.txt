@@ -35,24 +35,22 @@ public class RegistrationApp {
 
     private void initRegistrationPanel() {
         JPanel registrationPanel = new JPanel(new GridBagLayout());
-        
 
         registrationPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
+
         //Back button
         JButton backButton = new JButton("Exit");
-        backButton.addActionListener(new RegisterActionListener());
         styleButton(backButton);
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;
         backButton.addActionListener(e -> {
-            frame.dispose(); });
+            frame.dispose();
+        });
         registrationPanel.add(backButton, gbc);
-
 
         JLabel titleLabel = new JLabel("Register", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -107,16 +105,16 @@ public class RegistrationApp {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-      //Back button
+
+        //Back button
         JButton backButton = new JButton("Exit");
-        backButton.addActionListener(new RegisterActionListener());
         styleButton(backButton);
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;
         backButton.addActionListener(e -> {
-            frame.dispose(); });
+            frame.dispose();
+        });
         loginPanel.add(backButton, gbc);
 
         JLabel titleLabel = new JLabel("Login", SwingConstants.CENTER);
@@ -189,23 +187,20 @@ public class RegistrationApp {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JButton makePaymentButton = new JButton("Make Payment");
-        
         makePaymentButton.addActionListener(e -> {
             // Open the Make Payment interface
-            new TicketManagementApp(); // Create and display the EWalletApp
+            new TicketManagementApp(); // Create and display the TicketManagementApp
         });
         styleButton(makePaymentButton);
 
         JButton viewEwalletButton = new JButton("View E-Wallet");
-        
         viewEwalletButton.addActionListener(e -> {
             // Open the E-Wallet interface
-            new EWalletApp(); // Create and display the EWalletApp
+            new EWalletApp(0.0); // Create and display the EWalletApp
         });
         styleButton(viewEwalletButton);
 
         JButton reserveParkingButton = new JButton("Reserve Parking");
-        
         reserveParkingButton.addActionListener(e -> {
             // Open the Reserve Parking Interface
             new ParkingReservationApp(); // Create and display the Reserve Parking
@@ -213,13 +208,11 @@ public class RegistrationApp {
         styleButton(reserveParkingButton);
 
         JButton searchVehicleButton = new JButton("Search Vehicle");
-        
         searchVehicleButton.addActionListener(e -> {
             // Open the Search Vehicle
             new VehicleSearchApp(); // Create and display the Search Vehicle
         });
         styleButton(searchVehicleButton);
-
 
         centerPanel.add(makePaymentButton);
         centerPanel.add(viewEwalletButton);
@@ -229,7 +222,6 @@ public class RegistrationApp {
         homePanel.add(centerPanel, BorderLayout.CENTER);
 
         JButton logoutButton = new JButton("Logout");
-        frame.dispose();
         logoutButton.addActionListener(e -> cardLayout.show(mainPanel, "LoginPanel"));
         styleButton(logoutButton);
         homePanel.add(logoutButton, BorderLayout.SOUTH);
