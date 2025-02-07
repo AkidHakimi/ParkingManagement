@@ -25,6 +25,7 @@ public class RegistrationApp {
 
         initRegistrationPanel();
         initLoginPanel();
+        initHomePanel();
 
         frame.getContentPane().add(mainPanel);
         frame.setSize(500, 400);
@@ -171,11 +172,9 @@ public class RegistrationApp {
         loginPanel.add(goToRegisterButton, gbc);
 
         mainPanel.add(loginPanel, "LoginPanel");
-
-        initHomePanel();
     }
 
-    private void initHomePanel() {
+    public void initHomePanel() {
         JPanel homePanel = new JPanel(new BorderLayout(10, 10));
         homePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -189,14 +188,14 @@ public class RegistrationApp {
         JButton makePaymentButton = new JButton("Make Payment");
         makePaymentButton.addActionListener(e -> {
             // Open the Make Payment interface
-            new TicketManagementApp(); // Create and display the TicketManagementApp
+            new TicketManagementApp(this); // Create and display the TicketManagementApp with reference to RegistrationApp
         });
         styleButton(makePaymentButton);
 
         JButton viewEwalletButton = new JButton("View E-Wallet");
         viewEwalletButton.addActionListener(e -> {
             // Open the E-Wallet interface
-            new EWalletApp(0.0); // Create and display the EWalletApp
+            new EWalletApp(this, 0.0); // Create and display the EWalletApp with reference to RegistrationApp
         });
         styleButton(viewEwalletButton);
 
@@ -251,6 +250,10 @@ public class RegistrationApp {
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setFont(new Font("Arial", Font.BOLD, 14));
+    }
+
+    public void showHomePanel() {
+        cardLayout.show(mainPanel, "HomePanel");
     }
 
     public static void main(String[] args) {
