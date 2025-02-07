@@ -13,11 +13,13 @@ public class EWalletApp {
     private JLabel balanceLabel;
     private double balance;
     private List<String> transactionHistory;
+    private double amountToPay;
 
     /**
      * @wbp.parser.entryPoint
      */
-    public EWalletApp() {
+    public EWalletApp(double amountToPay) {
+        this.amountToPay = amountToPay;
         balance = 0.0;
         transactionHistory = new ArrayList<>();
         initialize();
@@ -25,7 +27,7 @@ public class EWalletApp {
 
     private void initialize() {
         frame = new JFrame("E-Wallet");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(520, 681);
         frame.getContentPane().setBackground(Color.WHITE);
 
@@ -96,11 +98,11 @@ public class EWalletApp {
         frame.getContentPane().add(balancePanel);
         frame.getContentPane().add(transactionHistoryPanel);
         
-                JButton backButton = new JButton("Back");
-                backButton.setBounds(10, 10, 101, 28);
-                frame.getContentPane().add(backButton);
-                backButton.addActionListener(e -> frame.dispose());
-                styleBackButton(backButton);
+        JButton backButton = new JButton("Back");
+        backButton.setBounds(10, 10, 101, 28);
+        frame.getContentPane().add(backButton);
+        backButton.addActionListener(e -> frame.dispose());
+        styleBackButton(backButton);
 
         frame.setVisible(true);
     }
@@ -143,12 +145,11 @@ public class EWalletApp {
     private class DeductActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            double parkingFee = 4.00; // Assume a fixed parking fee for simplicity
-            if (balance >= parkingFee) {
-                // Deduct parking fee from balance
-                balance -= parkingFee;
+            if (balance >= amountToPay) {
+                // Deduct amount to pay from balance
+                balance -= amountToPay;
                 balanceLabel.setText(String.format("Balance: RM%.2f", balance));
-                String transaction = String.format("Deduct: RM%.2f for Parking Ticket", parkingFee);
+                String transaction = String.format("Deduct: RM%.2f for Parking Ticket", amountToPay);
                 transactionHistory.add(transaction);
                 transactionHistoryArea.append(transaction + "\n");
 
@@ -162,6 +163,6 @@ public class EWalletApp {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(EWalletApp::new);
+        SwingUtilities.invokeLater(() -> new EWalletApp(0.0));
     }
 }
