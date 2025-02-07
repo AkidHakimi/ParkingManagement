@@ -1,12 +1,9 @@
-//VehicleSearchApp
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class VehicleSearchApp {
     private JFrame frame;
@@ -27,57 +24,48 @@ public class VehicleSearchApp {
         initSearchPanel();
         initResultPanel();
 
-        frame.setLocationRelativeTo(null); // Center the frame
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     private void initializeData() {
-        // Initialize vehicle database for demonstration purposes
-        vehicleDatabase.put("ABC1234", new Vehicle("ABC1234", "Toyota", "Camry", "Black"));
-        vehicleDatabase.put("XYZ5678", new Vehicle("XYZ5678", "Honda", "Civic", "White"));
-        vehicleDatabase.put("LMN4321", new Vehicle("LMN4321", "Ford", "Focus", "Blue"));
+        vehicleDatabase.put("ABC1234", new Vehicle("ABC1234", "Toyota", "Camry", "Black", "L1", "A", "P1"));
+        vehicleDatabase.put("XYZ5678", new Vehicle("XYZ5678", "Honda", "Civic", "White", "L2", "B", "P2"));
+        vehicleDatabase.put("LMN4321", new Vehicle("LMN4321", "Ford", "Focus", "Blue", "L3", "C", "P3"));
+        vehicleDatabase.put("UKM1000", new Vehicle("UKM1000", "Proton", "Saga", "Red", "L4", "D", "P4"));
     }
 
     private void initSearchPanel() {
-    	
-    	
         JPanel searchPanel = new JPanel(new BorderLayout(10, 10));
         searchPanel.setBorder(BorderFactory.createEmptyBorder(35, 35, 35, 35));
         searchPanel.setBackground(Color.WHITE);
-        
-     // Back button
+
         JButton backButton = new JButton("Back");
-        backButton.setBounds(10, 10, 70, 20);
+        backButton.setBounds(10, 10, 70, 20); // You might want to adjust bounds
         backButton.addActionListener(e -> {
-            frame.dispose(); // Close current window
-            // new RegistrationApp().showHomePanel(); // Uncomment this if RegistrationApp exists
+            frame.dispose();
         });
         styleButton(backButton);
-        searchPanel.add(backButton);
-       
+        searchPanel.add(backButton, BorderLayout.WEST); // Added to WEST
+
         JLabel searchLabel = new JLabel("Enter License Plate Number:");
         searchLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        searchPanel.add(searchLabel, BorderLayout.NORTH);
+        searchPanel.add(searchLabel, BorderLayout.CENTER); // Changed to CENTER
 
         searchField = new JTextField();
-        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchField, BorderLayout.SOUTH); // Changed to SOUTH
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new SearchActionListener());
         styleButton(searchButton);
-
-        JButton randomButton = new JButton("Random Plate Number");
-        randomButton.addActionListener(new RandomActionListener());
-        styleButton(randomButton);
-
         buttonPanel.add(searchButton);
-        buttonPanel.add(randomButton);
-        searchPanel.add(buttonPanel, BorderLayout.SOUTH);
+        searchPanel.add(buttonPanel, BorderLayout.EAST); // Added buttonPanel to EAST
 
         frame.add(searchPanel, BorderLayout.NORTH);
     }
+
+
 
     private void initResultPanel() {
         JPanel resultPanel = new JPanel(new BorderLayout(10, 10));
@@ -116,26 +104,6 @@ public class VehicleSearchApp {
         }
     }
 
-    private class RandomActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String randomPlateNumber = generateRandomPlateNumber();
-            searchField.setText(randomPlateNumber);
-        }
-    }
-
-    private String generateRandomPlateNumber() {
-        Random random = new Random();
-        StringBuilder plateNumber = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            plateNumber.append((char) ('A' + random.nextInt(26)));
-        }
-        for (int i = 0; i < 4; i++) {
-            plateNumber.append(random.nextInt(10));
-        }
-        return plateNumber.toString();
-    }
-
     private void styleButton(JButton button) {
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
@@ -153,19 +121,28 @@ class Vehicle {
     private String make;
     private String model;
     private String color;
+    private String level;
+    private String block;
+    private String parkingSpot;
 
-    public Vehicle(String licensePlate, String make, String model, String color) {
+    public Vehicle(String licensePlate, String make, String model, String color, String level, String block, String parkingSpot) {
         this.licensePlate = licensePlate;
         this.make = make;
         this.model = model;
         this.color = color;
+        this.level = level;
+        this.block = block;
+        this.parkingSpot = parkingSpot;
     }
 
     @Override
     public String toString() {
         return "License Plate: " + licensePlate + "\n" +
-               "Make: " + make + "\n" +
-               "Model: " + model + "\n" +
-               "Color: " + color + "\n";
+                "Make: " + make + "\n" +
+                "Model: " + model + "\n" +
+                "Color: " + color + "\n" +
+                "Level: " + level + "\n" +
+                "Block: " + block + "\n" +
+                "Parking Spot: " + parkingSpot + "\n";
     }
 }
