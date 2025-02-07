@@ -18,6 +18,7 @@ public class TicketManagementApp {
     private JTextField startTimeField;
     private JTextField endTimeField;
     private JTextField dateField;
+    private JTextField PlateNoField;
     private JTextField amountField;
     private JTextArea historyTextArea;
     private List<Ticket> tickets;
@@ -70,6 +71,9 @@ public class TicketManagementApp {
 
         JLabel dateLabel = new JLabel("Date (yyyy-MM-dd):");
         dateField = new JTextField();
+        
+        JLabel PlateNoLabel = new JLabel("Plate No (UKM 1):");
+        PlateNoField = new JTextField();
 
         JLabel amountLabel = new JLabel("Amount (RM):");
         amountField = new JTextField();
@@ -90,6 +94,7 @@ public class TicketManagementApp {
         JButton payParkingButton = new JButton("Pay Parking");
         payParkingButton.addActionListener(new PayParkingActionListener());
         styleButton(payParkingButton);
+        frame.dispose();
 
         centerPanel.add(startTimeLabel);
         centerPanel.add(startTimeField);
@@ -97,6 +102,8 @@ public class TicketManagementApp {
         centerPanel.add(endTimeField);
         centerPanel.add(dateLabel);
         centerPanel.add(dateField);
+        centerPanel.add(PlateNoLabel);
+        centerPanel.add(PlateNoField);
         centerPanel.add(amountLabel);
         centerPanel.add(amountField);
         centerPanel.add(viewHistoryButton);
@@ -160,7 +167,7 @@ public class TicketManagementApp {
                 DecimalFormat df = new DecimalFormat("#0.00");
                 amountField.setText("RM " + df.format(amount));
 
-                Ticket ticket = new Ticket(startTimeField.getText(), endTimeField.getText(), dateField.getText(), amount);
+                Ticket ticket = new Ticket(startTimeField.getText(), endTimeField.getText(), dateField.getText(),PlateNoField.getText(), amount);
                 tickets.add(ticket);
                 updateHistoryTextArea();
             } catch (Exception ex) {
@@ -183,6 +190,7 @@ public class TicketManagementApp {
     private class PayParkingActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            frame.dispose();
             // Launch the EWalletApp
             SwingUtilities.invokeLater(EWalletApp::new);
         }
@@ -205,17 +213,19 @@ class Ticket {
     private String startTime;
     private String endTime;
     private String date;
+    private String plateNo;
     private double amount;
 
-    public Ticket(String startTime, String endTime, String date, double amount) {
+    public Ticket(String startTime, String endTime, String date, String plateNo, double amount) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.date = date;
+        this.plateNo = plateNo;
         this.amount = amount;
     }
 
     @Override
     public String toString() {
-        return "Date: " + date + ", Start: " + startTime + ", End: " + endTime + ", Amount: RM " + amount;
+        return "Date: " + date + ", \nStart: " + startTime + ", \nEnd: " + endTime + ", \nPlate No: " + plateNo + ", \nAmount: RM " + amount;
     }
 }
