@@ -11,14 +11,17 @@ public class VehicleSearchApp {
     private JTextArea resultArea;
     private Map<String, Vehicle> vehicleDatabase;
 
+    /**
+     * @wbp.parser.entryPoint
+     */
     public VehicleSearchApp() {
         vehicleDatabase = new HashMap<>();
         initializeData();
 
         frame = new JFrame("Vehicle Search System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
-        frame.setLayout(new BorderLayout(10, 10));
+        frame.setSize(500, 436);
+        frame.getContentPane().setLayout(new BorderLayout(10, 10));
         frame.getContentPane().setBackground(Color.WHITE);
 
         initSearchPanel();
@@ -40,50 +43,56 @@ public class VehicleSearchApp {
         searchPanel.setBorder(BorderFactory.createEmptyBorder(35, 35, 35, 35));
         searchPanel.setBackground(Color.WHITE);
 
+        JPanel topPanel = new JPanel(new BorderLayout(10, 10));
+        topPanel.setBackground(Color.WHITE);
+
         JButton backButton = new JButton("Back");
-        backButton.setBounds(10, 10, 70, 20); // You might want to adjust bounds
+        backButton.setPreferredSize(new Dimension(70, 20));
         backButton.addActionListener(e -> {
             frame.dispose();
         });
         styleButton(backButton);
-        searchPanel.add(backButton, BorderLayout.WEST); // Added to WEST
+        topPanel.add(backButton, BorderLayout.WEST);
 
         JLabel searchLabel = new JLabel("Enter License Plate Number:");
         searchLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        searchPanel.add(searchLabel, BorderLayout.CENTER); // Changed to CENTER
+        topPanel.add(searchLabel, BorderLayout.CENTER);
+
+        searchPanel.add(topPanel, BorderLayout.NORTH);
 
         searchField = new JTextField();
-        searchPanel.add(searchField, BorderLayout.SOUTH); // Changed to SOUTH
+        searchPanel.add(searchField, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new SearchActionListener());
         styleButton(searchButton);
         buttonPanel.add(searchButton);
-        searchPanel.add(buttonPanel, BorderLayout.EAST); // Added buttonPanel to EAST
+        searchPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        frame.add(searchPanel, BorderLayout.NORTH);
+        frame.getContentPane().add(searchPanel, BorderLayout.NORTH);
     }
 
-
-
     private void initResultPanel() {
-        JPanel resultPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel resultPanel = new JPanel();
         resultPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         resultPanel.setBackground(Color.WHITE);
+        resultPanel.setLayout(null);
 
         JLabel resultLabel = new JLabel("Search Results:");
+        resultLabel.setBounds(20, 20, 446, 17);
         resultLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        resultPanel.add(resultLabel, BorderLayout.NORTH);
+        resultPanel.add(resultLabel);
 
         resultArea = new JTextArea();
         resultArea.setEditable(false);
         resultArea.setFont(new Font("Arial", Font.PLAIN, 14));
         resultArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JScrollPane scrollPane = new JScrollPane(resultArea);
-        resultPanel.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBounds(20, 47, 446, 146);
+        resultPanel.add(scrollPane);
 
-        frame.add(resultPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(resultPanel, BorderLayout.CENTER);
     }
 
     private class SearchActionListener implements ActionListener {
