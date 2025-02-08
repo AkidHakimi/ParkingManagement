@@ -27,7 +27,7 @@ public class ManageParkingSpot {
 
         // Back Button
         JButton backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(80, 30));  // Make the button smaller
+        backButton.setPreferredSize(new Dimension(80, 30));  
         backButton.addActionListener(e -> {
             admin.refreshParkingDisplay(); // Refresh the Admin panel
             cardLayout.show(mainPanel, "HomePanel"); // Navigate back to the home panel
@@ -76,7 +76,7 @@ public class ManageParkingSpot {
     private void updateParkingList() {
         listModel.clear();
         for (String[] spot : parkingSpots) {
-            listModel.addElement("Spot: " + spot[0] + " | Type: " + spot[1] + " | Status: " + spot[2]);
+            listModel.addElement("Spot: " + spot[0] + " | No Plate: " + spot[1] + " | Status: " + spot[2]);
         }
     }
 
@@ -84,14 +84,30 @@ public class ManageParkingSpot {
         int selectedIndex = parkingList.getSelectedIndex();
         if (selectedIndex != -1) {
             String[] spot = parkingSpots.get(selectedIndex);
-            // Toggle status between "Vacant" and "Occupied"
-            spot[2] = spot[2].equals("Vacant") ? "Occupied" : "Vacant";
-            updateParkingList();
-            JOptionPane.showMessageDialog(frame, "Availability updated!");
+            
+            if (spot[2].equals("Vacant")) {
+                // Prompt for a plate number
+                String plateNumber = JOptionPane.showInputDialog(frame, "Enter Plate Number:");
+                if (plateNumber != null && !plateNumber.trim().isEmpty()) {
+                    spot[2] = "Occupied"; // Set status to Occupied
+                    spot[1] = plateNumber.toUpperCase(); // Update plate number
+                    updateParkingList();
+                    JOptionPane.showMessageDialog(frame, "Parking spot marked as occupied!");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Plate number cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                spot[2] = "Vacant"; // Set status to Vacant
+                spot[1] = "No Car"; // Reset plate number
+                updateParkingList();
+                JOptionPane.showMessageDialog(frame, "Parking spot marked as vacant!");
+            }
         } else {
             JOptionPane.showMessageDialog(frame, "Please select a parking spot to update.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+
 
     private void removeParkingSpot() {
         int selectedIndex = parkingList.getSelectedIndex();
