@@ -11,9 +11,6 @@ public class VehicleSearchApp {
     private JTextArea resultArea;
     private Map<String, Vehicle> vehicleDatabase;
 
-    /**
-     * @wbp.parser.entryPoint
-     */
     public VehicleSearchApp() {
         vehicleDatabase = new HashMap<>();
         initializeData();
@@ -32,10 +29,16 @@ public class VehicleSearchApp {
     }
 
     private void initializeData() {
-        vehicleDatabase.put("ABC1234", new Vehicle("ABC1234", "Toyota", "Camry", "Black", "L1", "A", "P1"));
-        vehicleDatabase.put("XYZ5678", new Vehicle("XYZ5678", "Honda", "Civic", "White", "L2", "B", "P2"));
-        vehicleDatabase.put("LMN4321", new Vehicle("LMN4321", "Ford", "Focus", "Blue", "L3", "C", "P3"));
-        vehicleDatabase.put("UKM1000", new Vehicle("UKM1000", "Proton", "Saga", "Red", "L4", "D", "P4"));
+        vehicleDatabase.put("BBA 123", new Vehicle("BBA 123", "L2", "A", "P2"));
+        vehicleDatabase.put("CCA 456", new Vehicle("CCA 456", "L2", "A", "P4"));
+        vehicleDatabase.put("DDA 789", new Vehicle("DDA 789", "L2", "A", "P6"));
+        vehicleDatabase.put("UKM 100", new Vehicle("UKM 100", "L2", "A", "P8"));
+        vehicleDatabase.put("EEA 234", new Vehicle("EEA 234", "L2", "A", "P9"));
+        vehicleDatabase.put("FFA 567", new Vehicle("FFA 567", "L2", "A", "P11"));
+        vehicleDatabase.put("GGA 890", new Vehicle("GGA 890", "L2", "A", "P14"));
+        vehicleDatabase.put("HHA 123", new Vehicle("HHA 123", "L2", "A", "P16"));
+        vehicleDatabase.put("IIA 456", new Vehicle("IIA 456", "L2", "A", "P19"));
+
     }
 
     private void initSearchPanel() {
@@ -48,9 +51,7 @@ public class VehicleSearchApp {
 
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(70, 20));
-        backButton.addActionListener(e -> {
-            frame.dispose();
-        });
+        backButton.addActionListener(e -> frame.dispose()); // Simplified lambda
         styleButton(backButton);
         topPanel.add(backButton, BorderLayout.WEST);
 
@@ -74,23 +75,20 @@ public class VehicleSearchApp {
     }
 
     private void initResultPanel() {
-        JPanel resultPanel = new JPanel();
+        JPanel resultPanel = new JPanel(new BorderLayout()); // Use BorderLayout
         resultPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         resultPanel.setBackground(Color.WHITE);
-        resultPanel.setLayout(null);
 
         JLabel resultLabel = new JLabel("Search Results:");
-        resultLabel.setBounds(20, 20, 446, 17);
         resultLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        resultPanel.add(resultLabel);
+        resultPanel.add(resultLabel, BorderLayout.NORTH);
 
         resultArea = new JTextArea();
         resultArea.setEditable(false);
         resultArea.setFont(new Font("Arial", Font.PLAIN, 14));
         resultArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         JScrollPane scrollPane = new JScrollPane(resultArea);
-        scrollPane.setBounds(20, 47, 446, 146);
-        resultPanel.add(scrollPane);
+        resultPanel.add(scrollPane, BorderLayout.CENTER); // Add scroll pane to center
 
         frame.getContentPane().add(resultPanel, BorderLayout.CENTER);
     }
@@ -127,18 +125,12 @@ public class VehicleSearchApp {
 
 class Vehicle {
     private String licensePlate;
-    private String make;
-    private String model;
-    private String color;
     private String level;
     private String block;
     private String parkingSpot;
 
-    public Vehicle(String licensePlate, String make, String model, String color, String level, String block, String parkingSpot) {
+    public Vehicle(String licensePlate, String level, String block, String parkingSpot) {
         this.licensePlate = licensePlate;
-        this.make = make;
-        this.model = model;
-        this.color = color;
         this.level = level;
         this.block = block;
         this.parkingSpot = parkingSpot;
@@ -147,9 +139,6 @@ class Vehicle {
     @Override
     public String toString() {
         return "License Plate: " + licensePlate + "\n" +
-                "Make: " + make + "\n" +
-                "Model: " + model + "\n" +
-                "Color: " + color + "\n" +
                 "Level: " + level + "\n" +
                 "Block: " + block + "\n" +
                 "Parking Spot: " + parkingSpot + "\n";
